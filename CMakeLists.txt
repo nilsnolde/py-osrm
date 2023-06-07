@@ -21,7 +21,7 @@ if(NOT SKBUILD)
   )
 endif()
 
-find_package(Python 3.8
+find_package(Python 3.7
   REQUIRED COMPONENTS Interpreter Development.Module
   OPTIONAL_COMPONENTS Development.SABIModule
 )
