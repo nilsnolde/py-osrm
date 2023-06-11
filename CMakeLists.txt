@@ -36,15 +36,22 @@ find_package(nanobind CONFIG REQUIRED)
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 find_package(LibOSRM)
 
-set(SRCS
-  src/osrm_nb.cpp
-  src/engineconfig_nb.cpp
-)
+aux_source_directory("src" SRCS)
+aux_source_directory("src/utility" UTIL)
+aux_source_directory("src/parameters" PARAMS)
 nanobind_add_module(
   ${EXT_NAME}
   STABLE_ABI
   NB_STATIC
   ${SRCS}
+  ${UTIL}
+  ${PARAMS}
+)
+
+target_include_directories(${EXT_NAME} 
+  PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/utility
 )
 
 if(LibOSRM_FOUND)

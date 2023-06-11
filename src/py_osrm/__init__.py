@@ -1,1 +1,1 @@
-from .osrm_ext import OSRM, EngineConfig, Algorithm
+from .osrm_ext import OSRM, EngineConfig, Algorithm, RouteParameters

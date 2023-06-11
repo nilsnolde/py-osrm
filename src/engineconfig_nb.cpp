@@ -1,6 +1,7 @@
 #include "osrm/engine_config.hpp"
 
 #include <nanobind/nanobind.h>
+#include <nanobind/stl/string.h>
 
 namespace nb = nanobind;
 
@@ -16,7 +17,9 @@ void init_EngineConfig(nb::module_& m) {
     nb::class_<EngineConfig>(m, "EngineConfig", nb::is_final())
         .def(nb::init<>())
         .def("IsValid", &EngineConfig::IsValid)
-        .def_rw("storage_config", &EngineConfig::storage_config)
+        .def("SetStorageConfig", [](EngineConfig& self, const std::string& path) {
+            self.storage_config = osrm::storage::StorageConfig(path);
+        })
         .def_rw("max_locations_trip", &EngineConfig::max_locations_trip)
         .def_rw("max_locations_viaroute", &EngineConfig::max_locations_viaroute)
         .def_rw("max_locations_distance_table", &EngineConfig::max_locations_distance_table)
