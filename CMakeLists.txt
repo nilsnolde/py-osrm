@@ -33,12 +33,13 @@ execute_process(
 list(APPEND CMAKE_PREFIX_PATH "${NB_DIR}")
 find_package(nanobind CONFIG REQUIRED)
 
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
-find_package(LibOSRM)
-
-aux_source_directory("src" SRCS)
-aux_source_directory("src/utility" UTIL)
-aux_source_directory("src/parameters" PARAMS)
+set(SRCS
+  src/osrm_nb.cpp
+  src/engineconfig_nb.cpp
+  src/utility/osrm_kwargs.cpp
+  src/parameters/baseparameter_nb.cpp
+  src/parameters/routeparameter_nb.cpp
+)
 nanobind_add_module(
   ${EXT_NAME}
   STABLE_ABI
@@ -52,40 +53,33 @@ target_include_directories(${EXT_NAME}
   PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/include
     ${CMAKE_CURRENT_SOURCE_DIR}/include/utility
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/parameters
 )
 
-if(LibOSRM_FOUND)
-  target_link_libraries(${EXT_NAME}
-    PRIVATE
-      ${LibOSRM_LIBRARIES} ${LibOSRM_DEPENDENT_LIBRARIES}
-  )
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${LibOSRM_CXXFLAGS}")
-else()
-  include(FetchContent)
-  FetchContent_Declare(
-    libosrm
-    GIT_REPOSITORY https://github.com/Project-OSRM/osrm-backend
-    GIT_TAG master
-  )
+include(FetchContent)
+FetchContent_Declare(
+  libosrm
+  GIT_REPOSITORY https://github.com/Project-OSRM/osrm-backend
+  GIT_TAG master
+)
 
-  FetchContent_GetProperties(libosrm)
-  if(NOT libosrm_POPULATED)
-    FetchContent_Populate(libosrm)
-    add_subdirectory(
-      ${libosrm_SOURCE_DIR}
-      ${libosrm_BINARY_DIR}
-      EXCLUDE_FROM_ALL
-    )
-  endif()
-  
-  target_include_directories(${EXT_NAME} 
-    PUBLIC
-      ${libosrm_SOURCE_DIR}/include
-  )
-  target_link_libraries(${EXT_NAME}
-    PRIVATE
-      osrm
+FetchContent_GetProperties(libosrm)
+if(NOT libosrm_POPULATED)
+  FetchContent_Populate(libosrm)
+  add_subdirectory(
+    ${libosrm_SOURCE_DIR}
+    ${libosrm_BINARY_DIR}
+    EXCLUDE_FROM_ALL
   )
 endif()
+
+target_include_directories(${EXT_NAME} 
+  PUBLIC
+    ${libosrm_SOURCE_DIR}/include
+)
+target_link_libraries(${EXT_NAME}
+  PRIVATE
+    osrm
+)
 
 install(TARGETS ${EXT_NAME} LIBRARY DESTINATION ${PROJECT_NAME})
