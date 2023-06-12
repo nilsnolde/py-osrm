@@ -1,3 +1,5 @@
+#include "engineconfig_nb.h"
+
 #include "osrm/engine_config.hpp"
 
 #include <nanobind/nanobind.h>

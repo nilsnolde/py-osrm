@@ -1,3 +1,5 @@
+#include "parameters/baseparameter_nb.h"
+
 #include "engine/api/base_parameters.hpp"
 
 #include <nanobind/nanobind.h>

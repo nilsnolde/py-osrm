@@ -1,19 +1,16 @@
 #include "osrm/osrm.hpp"
-
 #include "osrm/engine_config.hpp"
 #include "osrm/route_parameters.hpp"
-
-#include "utility/osrm_kwargs.h"
 
 #include <nanobind/nanobind.h>
 #include <nanobind/stl/string.h>
 
-namespace nb = nanobind;
-using namespace nb::literals;
+#include "engineconfig_nb.h"
+#include "utility/osrm_kwargs.h"
+#include "parameters/baseparameter_nb.h"
+#include "parameters/routeparameter_nb.h"
 
-void init_EngineConfig(nb::module_& m);
-void init_BaseParameters(nb::module_& m);
-void init_RouteParameters(nb::module_& m);
+namespace nb = nanobind;
 
 NB_MODULE(osrm_ext, m) {
     namespace api = osrm::engine::api;

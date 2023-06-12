@@ -1,3 +1,5 @@
+#include "parameters/baseparameter_nb.h"
+
 #include "engine/api/route_parameters.hpp"
 
 #include <nanobind/nanobind.h>
@@ -85,7 +87,7 @@ void init_RouteParameters(nb::module_& m) {
                 static_cast<std::underlying_type_t<RouteParameters::AnnotationsType>>(rhs));
         }, nb::is_operator())
         .def("__or__", [](RouteParameters::AnnotationsType lhs, RouteParameters::AnnotationsType rhs) {
-            return (RouteParameters::AnnotationsType)(
+            return RouteParameters::AnnotationsType(
                 static_cast<std::underlying_type_t<RouteParameters::AnnotationsType>>(lhs) |
                 static_cast<std::underlying_type_t<RouteParameters::AnnotationsType>>(rhs));
         }, nb::is_operator())
