@@ -27,7 +27,7 @@ void init_RouteParameters(nb::module_& m) {
         .export_values();
 
     nb::enum_<RouteParameters::AnnotationsType>(m, "AnnotationsType", nb::is_arithmetic())
-        .value("None", RouteParameters::AnnotationsType::None)
+        .value("None_", RouteParameters::AnnotationsType::None)
         .value("Duration", RouteParameters::AnnotationsType::Duration)
         .value("Nodes", RouteParameters::AnnotationsType::Nodes)
         .value("Distance", RouteParameters::AnnotationsType::Distance)

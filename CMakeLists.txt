@@ -37,8 +37,16 @@ set(SRCS
   src/osrm_nb.cpp
   src/engineconfig_nb.cpp
   src/utility/osrm_kwargs.cpp
+
   src/parameters/baseparameter_nb.cpp
   src/parameters/routeparameter_nb.cpp
+  
+  src/types/optional_nb.cpp
+  src/types/status_nb.cpp
+  src/types/coordinate_nb.cpp
+  src/types/jsoncontainer_nb.cpp
+  src/types/approach_nb.cpp
+  src/types/bearing_nb.cpp
 )
 nanobind_add_module(
   ${EXT_NAME}
