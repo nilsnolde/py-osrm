@@ -8,10 +8,5 @@ from .osrm_ext import (
     AnnotationsType,
     SnappingType,
     OverviewType,
-    Object,
-
-    Approach,
-    Bearing,
-    Coordinate,
-    Status
+    Object
 )
