@@ -62,7 +62,7 @@ void init_RouteParameters(nb::module_& m) {
                 "geometries"_a,
                 "overview"_a,
                 "continue_straight"_a,
-                "waypoints"_a,
+                "waypoints"_a = std::vector<std::size_t>(),
                     "coordinates"_a = std::vector<osrm::util::Coordinate>(),
                     "hints"_a = std::vector<boost::optional<osrm::engine::Hint>>(),
                     "radiuses"_a = std::vector<boost::optional<double>>(),
