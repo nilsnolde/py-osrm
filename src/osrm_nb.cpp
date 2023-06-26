@@ -7,6 +7,12 @@
 
 #include "engineconfig_nb.h"
 #include "utility/osrm_kwargs.h"
+#include "types/approach_nb.h"
+#include "types/bearing_nb.h"
+#include "types/coordinate_nb.h"
+#include "types/jsoncontainer_nb.h"
+#include "types/optional_nb.h"
+#include "types/status_nb.h"
 #include "parameters/baseparameter_nb.h"
 #include "parameters/routeparameter_nb.h"
 
@@ -21,6 +27,14 @@ NB_MODULE(osrm_ext, m) {
     using osrm::engine::api::RouteParameters;
 
     init_EngineConfig(m);
+
+    init_Approach(m);
+    init_Bearing(m);
+    init_Coordinate(m);
+    init_JSONContainer(m);
+    init_Optional(m);
+    init_Status(m);
+
     init_BaseParameters(m);
     init_RouteParameters(m);
 
