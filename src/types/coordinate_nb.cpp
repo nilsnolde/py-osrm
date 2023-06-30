@@ -1,3 +1,5 @@
+#include "types/coordinate_nb.h"
+
 #include "util/coordinate.hpp"
 
 #include <nanobind/nanobind.h>

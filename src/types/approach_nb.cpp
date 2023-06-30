@@ -1,3 +1,5 @@
+#include "types/approach_nb.h"
+
 #include "engine/approach.hpp"
 
 #include <nanobind/nanobind.h>

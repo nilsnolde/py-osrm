@@ -1,3 +1,5 @@
+#include "types/bearing_nb.h"
+
 #include "engine/bearing.hpp"
 
 #include <nanobind/nanobind.h>

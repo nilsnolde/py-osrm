@@ -1,3 +1,5 @@
+#include "types/status_nb.h"
+
 #include "osrm/status.hpp"
 
 #include <nanobind/nanobind.h>
