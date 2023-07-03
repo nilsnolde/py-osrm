@@ -26,8 +26,8 @@ from .osrm_ext import (
     TripSourceType,
     TripDestinationType,
 
-    # MatchParameters,
-    # MatchGapsType,
+    MatchParameters,
+    MatchGapsType,
 
     Object
 )

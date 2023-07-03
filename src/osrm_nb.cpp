@@ -51,12 +51,12 @@ NB_MODULE(osrm_ext, m) {
     init_Status(m);
 
     init_BaseParameters(m);
-    // init_MatchParameters(m);
     init_NearestParameters(m);
-    init_RouteParameters(m);
     init_TableParameters(m);
-    init_TileParameters(m);
+    init_RouteParameters(m);
+    init_MatchParameters(m);
     init_TripParameters(m);
+    init_TileParameters(m);
 
     nb::class_<OSRM>(m, "OSRM", nb::is_final())
         .def(nb::init<EngineConfig&>())
@@ -72,8 +72,8 @@ NB_MODULE(osrm_ext, m) {
 
             new (t) OSRM(config);
         })
-        // .def("Match", nb::overload_cast<const MatchParameters&, json::Object&>(&OSRM::Match, nb::const_))
-        // .def("Match", nb::overload_cast<const MatchParameters&, api::ResultT&>(&OSRM::Match, nb::const_))
+        .def("Match", nb::overload_cast<const MatchParameters&, json::Object&>(&OSRM::Match, nb::const_))
+        .def("Match", nb::overload_cast<const MatchParameters&, api::ResultT&>(&OSRM::Match, nb::const_))
         .def("Nearest", nb::overload_cast<const NearestParameters&, json::Object&>(&OSRM::Nearest, nb::const_))
         .def("Nearest", nb::overload_cast<const NearestParameters&, api::ResultT&>(&OSRM::Nearest, nb::const_))
         .def("Route", nb::overload_cast<const RouteParameters&, json::Object&>(&OSRM::Route, nb::const_))
