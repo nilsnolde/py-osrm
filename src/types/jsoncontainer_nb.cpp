@@ -20,12 +20,9 @@ void init_JSONContainer(nb::module_& m) {
         .def("__bool__", [](const json::Object& obj) {
             return obj.values.empty();
         })
-        .def("__repr__", [](json::Object& obj) {
-            std::string output = "";
-            ValueStringifyVisitor visitor(output);
-            visitor.visitobject(obj);
-
-            return output;
+        .def("__repr__", [](const json::Object& obj) {
+            ValueStringifyVisitor visitor;
+            return visitor.visitobject(obj);
         })
         .def("__getitem__", [](json::Object& obj, const std::string& key) {
             return obj.values[key];
@@ -44,11 +41,8 @@ void init_JSONContainer(nb::module_& m) {
             return arr.values.empty();
         })
         .def("__repr__", [](const json::Array& arr) {
-            std::string output = "";
-            ValueStringifyVisitor visitor(output);
-            visitor.visitarray(arr);
-
-            return output;
+            ValueStringifyVisitor visitor;
+            return visitor.visitarray(arr);
         })
         .def("__iter__", [](const json::Array& arr) {
             return nb::make_iterator(nb::type<json::Value>(), "iterator",

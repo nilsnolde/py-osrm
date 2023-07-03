@@ -61,54 +61,51 @@ template <> struct type_caster<json::Null> : type_caster_base<json::Null> {
 } //nanobind::detail
 
 struct ValueStringifyVisitor {
-    ValueStringifyVisitor(std::string& output) : _output(output) {};
-    std::string& _output;
-
-    void operator()(const json::String& str) {
-        _output += "'" + str.value + "'";
+    std::string operator()(const json::String& str) {
+        return "'" + str.value + "'";
     }
-    void operator()(const json::Number& num) {
-        _output += std::to_string(num.value);
+    std::string operator()(const json::Number& num) {
+        return std::to_string(num.value);
     }
-    void operator()(const json::True& str) {
-        _output += "True";
+    std::string operator()(const json::True& str) {
+        return "True";
     }
-    void operator()(const json::False&) {
-        _output += "False";
+    std::string operator()(const json::False&) {
+        return "False";
     }
-    void operator()(const json::Null&) {
-        _output += "None";
+    std::string operator()(const json::Null&) {
+        return "None";
     }
 
-    void visitarray(const json::Array& arr) {
-        _output += "[";
+    std::string visitarray(const json::Array& arr) {
+        std::string output = "[";
         for(int i = 0; i < arr.values.size(); ++i) {
             if(i != 0) {
-                _output += ", ";
+                output += ", ";
             }
-            mapbox::util::apply_visitor(*this, arr.values[i]);
+            output += mapbox::util::apply_visitor(*this, arr.values[i]);
         }
-        _output += "]";
+        return output + "]";
     }
-    void operator()(const mapbox::util::recursive_wrapper<json::Array>& arr) {
-        visitarray(arr.get());
+    std::string operator()(const mapbox::util::recursive_wrapper<json::Array>& arr) {
+        return visitarray(arr.get());
     }
 
-    void visitobject(const json::Object& obj) {
-        _output += "{";
+    std::string visitobject(const json::Object& obj) {
+        std::string output = "{";
         bool first = true;
         for(auto itr : obj.values) {
             if(!first) {
-                _output += ", ";
+                output += ", ";
             }
-            _output += "'" + itr.first + "': ";
-            mapbox::util::apply_visitor(*this, itr.second);
+            output += "'" + itr.first + "': ";
+            output += mapbox::util::apply_visitor(*this, itr.second);
             first = false;
         }
-        _output += "}";
+        return output + "}";
     }
-    void operator()(const mapbox::util::recursive_wrapper<json::Object>& obj) {
-        visitobject(obj);
+    std::string operator()(const mapbox::util::recursive_wrapper<json::Object>& obj) {
+        return visitobject(obj.get());
     }
 };
 
