@@ -27,8 +27,8 @@ void init_MatchParameters(nb::module_& m) {
             bool tidy,
             std::vector<std::size_t> waypoints,
                 const bool steps,
-                const bool alternatives,
-                const RouteParameters::AnnotationsType annotations,
+                int number_of_alternatives,
+                const std::vector<RouteParameters::AnnotationsType>& annotations,
                 const RouteParameters::GeometriesType geometries,
                 const RouteParameters::OverviewType overview,
                 const boost::optional<bool> continue_straight,
@@ -41,13 +41,24 @@ void init_MatchParameters(nb::module_& m) {
                     std::vector<std::string> exclude,
                     const BaseParameters::SnappingType snapping
             ) {
-                new (t) MatchParameters(
-                    timestamps, gaps, tidy, 
-                    steps, alternatives, annotations,
-                    geometries, overview, continue_straight
-                );
+                new (t) MatchParameters();
 
+                t->timestamps = std::move(timestamps);
+                t->gaps = gaps;
+                t->tidy = tidy;
                 t->waypoints = std::move(waypoints);
+
+                t->steps = steps;
+                t->alternatives = (bool)number_of_alternatives;
+                t->number_of_alternatives = number_of_alternatives;
+                t->annotations = !annotations.empty();
+                for(int i = 0; i < annotations.size(); ++i) {
+                    t->annotations_type = t->annotations_type | annotations[i];
+                }           
+                t->geometries = geometries;
+                t->overview = overview;
+                t->continue_straight = continue_straight;
+        
                 t->coordinates = std::move(coordinates);
                 t->hints = std::move(hints);
                 t->radiuses = std::move(radiuses);
@@ -63,7 +74,7 @@ void init_MatchParameters(nb::module_& m) {
                 "waypoints"_a = std::vector<std::size_t>(),
                     "steps"_a,
                     "alternatives"_a,
-                    "annotations"_a  = RouteParameters::AnnotationsType::None,
+                    "annotations"_a = std::vector<RouteParameters::AnnotationsType>(),
                     "geometries"_a,
                     "overview"_a,
                     "continue_straight"_a,
