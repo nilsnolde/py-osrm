@@ -14,19 +14,19 @@ void init_RouteParameters(nb::module_& m) {
     using osrm::engine::api::BaseParameters;
     using osrm::engine::api::RouteParameters;
 
-    nb::enum_<RouteParameters::GeometriesType>(m, "GeometriesType")
+    nb::enum_<RouteParameters::GeometriesType>(m, "RouteGeometriesType")
         .value("Polyline", RouteParameters::GeometriesType::Polyline)
         .value("Polyline6", RouteParameters::GeometriesType::Polyline6)
         .value("GeoJSON", RouteParameters::GeometriesType::GeoJSON)
         .export_values();
 
-    nb::enum_<RouteParameters::OverviewType>(m, "OverviewType")
+    nb::enum_<RouteParameters::OverviewType>(m, "RouteOverviewType")
         .value("Simplified", RouteParameters::OverviewType::Simplified)
         .value("Full", RouteParameters::OverviewType::Full)
         .value("False", RouteParameters::OverviewType::False)
         .export_values();
 
-    nb::enum_<RouteParameters::AnnotationsType>(m, "AnnotationsType", nb::is_arithmetic())
+    nb::enum_<RouteParameters::AnnotationsType>(m, "RouteAnnotationsType", nb::is_arithmetic())
         .value("None_", RouteParameters::AnnotationsType::None)
         .value("Duration", RouteParameters::AnnotationsType::Duration)
         .value("Nodes", RouteParameters::AnnotationsType::Nodes)

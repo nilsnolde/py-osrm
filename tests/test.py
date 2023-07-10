@@ -15,30 +15,12 @@ engine = py_osrm.OSRM(
 route_params = py_osrm.RouteParameters(
     steps = True, 
     alternatives = True, 
-    annotations = py_osrm.AnnotationsType.None_,
-    geometries = py_osrm.GeometriesType.GeoJSON,
-    overview = py_osrm.OverviewType.Full,
+    annotations = py_osrm.RouteAnnotationsType.None_,
+    geometries = py_osrm.RouteGeometriesType.GeoJSON,
+    overview = py_osrm.RouteOverviewType.Full,
     continue_straight = True, #py_osrm.OptionalBool(True),
     coordinates = [(7.41337, 43.72956), (7.41546, 43.73077)]
 )
-
-# route_params = py_osrm.RouteParameters(
-#     steps = True, 
-#     alternatives = True, 
-#     annotations = py_osrm.AnnotationsType.None_,
-#     geometries = py_osrm.GeometriesType.GeoJSON,
-#     overview = py_osrm.OverviewType.Full,
-#     continue_straight = True, #py_osrm.OptionalBool(True),
-#     waypoints = [1],
-#     coordinates = [(1.0, 2.0)],
-#     radiuses = [3],
-#     bearings = [(3,3)], #[py_osrm.Bearing((3,3))], [py_osrm.OptionalBearing((3,3))]
-#     approaches = [py_osrm.Approach.CURB],
-#     generate_hints = True,
-#     exclude = [],
-#     snapping = py_osrm.SnappingType.Default
-# )
-
 result = py_osrm.Object()
 
 status = engine.Route(route_params, result)

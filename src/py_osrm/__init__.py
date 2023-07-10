@@ -3,10 +3,31 @@ from .osrm_ext import (
     EngineConfig,
     Algorithm,
 
-    RouteParameters,
-    GeometriesType,
-    AnnotationsType,
+    Approach,
+    Bearing,
+    Coordinate,
     SnappingType,
-    OverviewType,
+    OutputFormatType,
+    
+    RouteParameters,
+    RouteGeometriesType,
+    RouteOverviewType,
+    RouteAnnotationsType,
+
+    NearestParameters,
+
+    TableParameters,
+    TableFallbackCoordinateType,
+    TableAnnotationsType,
+
+    TileParameters,
+
+    TripParameters,
+    TripSourceType,
+    TripDestinationType,
+
+    MatchParameters,
+    MatchGapsType,
+
     Object
 )

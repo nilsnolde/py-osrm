@@ -40,6 +40,11 @@ set(SRCS
 
   src/parameters/baseparameter_nb.cpp
   src/parameters/routeparameter_nb.cpp
+  src/parameters/matchparameter_nb.cpp
+  src/parameters/nearestparameter_nb.cpp
+  src/parameters/tableparameter_nb.cpp
+  src/parameters/tileparameter_nb.cpp
+  src/parameters/tripparameter_nb.cpp
   
   src/types/optional_nb.cpp
   src/types/status_nb.cpp
