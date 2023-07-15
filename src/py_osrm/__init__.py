@@ -8,6 +8,8 @@ from .osrm_ext import (
     Coordinate,
     SnappingType,
     OutputFormatType,
+
+    Array,
     
     RouteParameters,
     RouteGeometriesType,

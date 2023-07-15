@@ -2,8 +2,6 @@
 
 #include "util/json_container.hpp"
 
-#include <mapbox/variant.hpp>
-
 #include <nanobind/nanobind.h>
 #include <nanobind/make_iterator.h>
 #include <nanobind/stl/string.h>
@@ -18,7 +16,7 @@ void init_JSONContainer(nb::module_& m) {
             return obj.values.size();
         })
         .def("__bool__", [](const json::Object& obj) {
-            return obj.values.empty();
+            return !obj.values.empty();
         })
         .def("__repr__", [](const json::Object& obj) {
             ValueStringifyVisitor visitor;
@@ -38,11 +36,14 @@ void init_JSONContainer(nb::module_& m) {
             return arr.values.size();
         })
         .def("__bool__", [](const json::Array& arr) {
-            return arr.values.empty();
+            return !arr.values.empty();
         })
         .def("__repr__", [](const json::Array& arr) {
             ValueStringifyVisitor visitor;
             return visitor.visitarray(arr);
+        })
+        .def("__getitem__", [](json::Array& arr, int i) {
+            return arr.values[i];
         })
         .def("__iter__", [](const json::Array& arr) {
             return nb::make_iterator(nb::type<json::Value>(), "iterator",

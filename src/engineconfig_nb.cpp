@@ -5,6 +5,8 @@
 #include <nanobind/nanobind.h>
 #include <nanobind/stl/string.h>
 
+#include "utility/osrm_utility.h"
+
 namespace nb = nanobind;
 
 void init_EngineConfig(nb::module_& m) {
@@ -18,6 +20,15 @@ void init_EngineConfig(nb::module_& m) {
 
     nb::class_<EngineConfig>(m, "EngineConfig", nb::is_final())
         .def(nb::init<>())
+        .def("__init__", [](EngineConfig* t, const nb::kwargs& kwargs) {
+            new (t) EngineConfig();
+
+            osrm_nb_util::populate_cfg_from_kwargs(kwargs, *t);
+
+            if(!t->IsValid()) {
+                throw std::runtime_error("Config Parameters are Invalid");
+            }
+        })
         .def("IsValid", &EngineConfig::IsValid)
         .def("SetStorageConfig", [](EngineConfig& self, const std::string& path) {
             self.storage_config = osrm::storage::StorageConfig(path);

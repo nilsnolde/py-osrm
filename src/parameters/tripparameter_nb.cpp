@@ -26,35 +26,60 @@ void init_TripParameters(nb::module_& m) {
 
     nb::class_<TripParameters, RouteParameters>(m, "TripParameters")
         .def(nb::init<>())
-        .def(nb::init<
-                TripParameters::SourceType,
-                TripParameters::DestinationType,
+        .def("__init__", [](TripParameters* t,
+                TripParameters::SourceType source,
+                TripParameters::DestinationType destination,
                 bool,
-                    const bool,
-                    const bool,
-                    const RouteParameters::AnnotationsType,
-                    const RouteParameters::GeometriesType,
-                    const RouteParameters::OverviewType,
-                    const boost::optional<bool>,
-                    std::vector<std::size_t>,
-                    std::vector<osrm::util::Coordinate>,
-                    std::vector<boost::optional<osrm::engine::Hint>>,
-                    std::vector<boost::optional<double>>,
-                    std::vector<boost::optional<osrm::engine::Bearing>>,
-                    std::vector<boost::optional<osrm::engine::Approach>>,
-                    bool,
-                    std::vector<std::string>,
-                    const BaseParameters::SnappingType
-            >(),
-                "source"_a,
-                "destination"_a,
-                "roundtrip"_a,
-                    "steps"_a,
-                    "alternatives"_a,
-                    "annotations"_a = RouteParameters::AnnotationsType::None,
-                    "geometries"_a,
-                    "overview"_a,
-                    "continue_straight"_a,
+                    const bool steps,
+                    int number_of_alternatives,
+                    const std::vector<RouteParameters::AnnotationsType>& annotations,
+                    const RouteParameters::GeometriesType geometries,
+                    const RouteParameters::OverviewType overview,
+                    const boost::optional<bool> continue_straight,
+                    std::vector<std::size_t> waypoints,
+                    std::vector<osrm::util::Coordinate> coordinates,
+                    std::vector<boost::optional<osrm::engine::Hint>> hints,
+                    std::vector<boost::optional<double>> radiuses,
+                    std::vector<boost::optional<osrm::engine::Bearing>> bearings,
+                    std::vector<boost::optional<osrm::engine::Approach>> approaches,
+                    bool generate_hints,
+                    std::vector<std::string> exclude,
+                    const BaseParameters::SnappingType snapping
+            ) {
+                new (t) TripParameters();
+
+                t->source = source;
+                t->destination = destination;
+
+                t->steps = steps;
+                t->alternatives = (bool)number_of_alternatives;
+                t->number_of_alternatives = number_of_alternatives;
+                t->annotations = !annotations.empty();
+                for(int i = 0; i < annotations.size(); ++i) {
+                    t->annotations_type = t->annotations_type | annotations[i];
+                }           
+                t->geometries = geometries;
+                t->overview = overview;
+                t->continue_straight = continue_straight;
+                t->waypoints = std::move(waypoints);
+                t->coordinates = std::move(coordinates);
+                t->hints = std::move(hints);
+                t->radiuses = std::move(radiuses);
+                t->bearings = std::move(bearings);
+                t->approaches = std::move(approaches);
+                t->generate_hints = generate_hints;
+                t->exclude = std::move(exclude);
+                t->snapping = snapping;
+            },
+                "source"_a = TripParameters::SourceType::Any,
+                "destination"_a = TripParameters::DestinationType::Any,
+                "roundtrip"_a = true,
+                    "steps"_a = false,
+                    "alternatives"_a = 0,
+                    "annotations"_a = std::vector<RouteParameters::AnnotationsType>(),
+                    "geometries"_a = RouteParameters::GeometriesType::Polyline,
+                    "overview"_a = RouteParameters::OverviewType::Simplified,
+                    "continue_straight"_a = boost::optional<bool>(),
                     "waypoints"_a = std::vector<std::size_t>(),
                     "coordinates"_a = std::vector<osrm::util::Coordinate>(),
                     "hints"_a = std::vector<boost::optional<osrm::engine::Hint>>(),

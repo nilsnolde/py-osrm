@@ -23,7 +23,7 @@ void init_RouteParameters(nb::module_& m) {
     nb::enum_<RouteParameters::OverviewType>(m, "RouteOverviewType")
         .value("Simplified", RouteParameters::OverviewType::Simplified)
         .value("Full", RouteParameters::OverviewType::Full)
-        .value("False", RouteParameters::OverviewType::False)
+        .value("False_", RouteParameters::OverviewType::False)
         .export_values();
 
     nb::enum_<RouteParameters::AnnotationsType>(m, "RouteAnnotationsType", nb::is_arithmetic())
@@ -35,33 +35,69 @@ void init_RouteParameters(nb::module_& m) {
         .value("Datasources", RouteParameters::AnnotationsType::Datasources)
         .value("Speed", RouteParameters::AnnotationsType::Speed)
         .value("All", RouteParameters::AnnotationsType::All)
-        .export_values();
+        .export_values()
+        .def("__and__", [](RouteParameters::AnnotationsType lhs, RouteParameters::AnnotationsType rhs) {
+            return static_cast<bool>(
+                static_cast<std::underlying_type_t<RouteParameters::AnnotationsType>>(lhs) &
+                static_cast<std::underlying_type_t<RouteParameters::AnnotationsType>>(rhs));
+        }, nb::is_operator())
+        .def("__or__", [](RouteParameters::AnnotationsType lhs, RouteParameters::AnnotationsType rhs) {
+            return RouteParameters::AnnotationsType(
+                static_cast<std::underlying_type_t<RouteParameters::AnnotationsType>>(lhs) |
+                static_cast<std::underlying_type_t<RouteParameters::AnnotationsType>>(rhs));
+        }, nb::is_operator())
+        .def("__ior__", [](RouteParameters::AnnotationsType& lhs, RouteParameters::AnnotationsType rhs) {
+            return lhs = lhs | rhs;
+        }, nb::is_operator());
 
     nb::class_<RouteParameters, BaseParameters>(m, "RouteParameters")
         .def(nb::init<>())
-        .def(nb::init<
-                const bool,
-                const bool,
-                const RouteParameters::AnnotationsType,
-                const RouteParameters::GeometriesType,
-                const RouteParameters::OverviewType,
-                const boost::optional<bool>,
-                std::vector<std::size_t>,
-                    std::vector<osrm::util::Coordinate>,
-                    std::vector<boost::optional<osrm::engine::Hint>>,
-                    std::vector<boost::optional<double>>,
-                    std::vector<boost::optional<osrm::engine::Bearing>>,
-                    std::vector<boost::optional<osrm::engine::Approach>>,
-                    bool,
-                    std::vector<std::string>,
-                    const BaseParameters::SnappingType
-            >(),
-                "steps"_a,
-                "alternatives"_a,
-                "annotations"_a = RouteParameters::AnnotationsType::None,
-                "geometries"_a,
-                "overview"_a,
-                "continue_straight"_a,
+        .def("__init__", [](RouteParameters* t,
+                const bool steps,
+                int number_of_alternatives,
+                const std::vector<RouteParameters::AnnotationsType>& annotations,
+                const RouteParameters::GeometriesType geometries,
+                const RouteParameters::OverviewType overview,
+                const boost::optional<bool> continue_straight,
+                std::vector<std::size_t> waypoints,
+                    std::vector<osrm::util::Coordinate> coordinates,
+                    std::vector<boost::optional<osrm::engine::Hint>> hints,
+                    std::vector<boost::optional<double>> radiuses,
+                    std::vector<boost::optional<osrm::engine::Bearing>> bearings,
+                    std::vector<boost::optional<osrm::engine::Approach>> approaches,
+                    bool generate_hints,
+                    std::vector<std::string> exclude,
+                    const BaseParameters::SnappingType snapping
+            ) {
+                new (t) RouteParameters();
+
+                t->steps = steps;
+                t->alternatives = (bool)number_of_alternatives;
+                t->number_of_alternatives = number_of_alternatives;
+                t->annotations = !annotations.empty();
+                for(int i = 0; i < annotations.size(); ++i) {
+                    t->annotations_type = t->annotations_type | annotations[i];
+                }           
+                t->geometries = geometries;
+                t->overview = overview;
+                t->continue_straight = continue_straight;
+                t->waypoints = std::move(waypoints);
+        
+                t->coordinates = std::move(coordinates);
+                t->hints = std::move(hints);
+                t->radiuses = std::move(radiuses);
+                t->bearings = std::move(bearings);
+                t->approaches = std::move(approaches);
+                t->generate_hints = generate_hints;
+                t->exclude = std::move(exclude);
+                t->snapping = snapping;
+            },
+                "steps"_a = false,
+                "alternatives"_a = 0,
+                "annotations"_a = std::vector<RouteParameters::AnnotationsType>(),
+                "geometries"_a = RouteParameters::GeometriesType::Polyline,
+                "overview"_a = RouteParameters::OverviewType::Simplified,
+                "continue_straight"_a = boost::optional<bool>(),
                 "waypoints"_a = std::vector<std::size_t>(),
                     "coordinates"_a = std::vector<osrm::util::Coordinate>(),
                     "hints"_a = std::vector<boost::optional<osrm::engine::Hint>>(),
@@ -80,18 +116,5 @@ void init_RouteParameters(nb::module_& m) {
         .def_rw("geometries", &RouteParameters::geometries)
         .def_rw("overview", &RouteParameters::overview)
         .def_rw("continue_straight", &RouteParameters::continue_straight)
-        .def("IsValid", &RouteParameters::IsValid)
-        .def("__and__", [](RouteParameters::AnnotationsType lhs, RouteParameters::AnnotationsType rhs) {
-            return static_cast<bool>(
-                static_cast<std::underlying_type_t<RouteParameters::AnnotationsType>>(lhs) &
-                static_cast<std::underlying_type_t<RouteParameters::AnnotationsType>>(rhs));
-        }, nb::is_operator())
-        .def("__or__", [](RouteParameters::AnnotationsType lhs, RouteParameters::AnnotationsType rhs) {
-            return RouteParameters::AnnotationsType(
-                static_cast<std::underlying_type_t<RouteParameters::AnnotationsType>>(lhs) |
-                static_cast<std::underlying_type_t<RouteParameters::AnnotationsType>>(rhs));
-        }, nb::is_operator())
-        .def("__ior__", [](RouteParameters::AnnotationsType lhs, RouteParameters::AnnotationsType rhs) {
-            return lhs = lhs | rhs;
-        }, nb::is_operator());
+        .def("IsValid", &RouteParameters::IsValid);
 }

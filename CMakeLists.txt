@@ -36,7 +36,7 @@ find_package(nanobind CONFIG REQUIRED)
 set(SRCS
   src/osrm_nb.cpp
   src/engineconfig_nb.cpp
-  src/utility/osrm_kwargs.cpp
+  src/utility/osrm_utility.cpp
 
   src/parameters/baseparameter_nb.cpp
   src/parameters/routeparameter_nb.cpp
@@ -47,7 +47,6 @@ set(SRCS
   src/parameters/tripparameter_nb.cpp
   
   src/types/optional_nb.cpp
-  src/types/status_nb.cpp
   src/types/coordinate_nb.cpp
   src/types/jsoncontainer_nb.cpp
   src/types/approach_nb.cpp
