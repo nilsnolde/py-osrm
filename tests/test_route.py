@@ -83,7 +83,7 @@ class TestRoute:
         osrm = py_osrm.OSRM()
         route_params = py_osrm.RouteParameters(
             coordinates = two_test_coordinates,
-            geometries = py_osrm.RouteGeometriesType.GeoJSON
+            geometries = "geojson"
         )
         res = osrm.Route(route_params)
         assert(isinstance(res["routes"][0]["geometry"]["coordinates"], py_osrm.Array))
@@ -94,8 +94,8 @@ class TestRoute:
         route_params = py_osrm.RouteParameters(
             coordinates = two_test_coordinates,
             continue_straight = False,
-            overview = py_osrm.RouteOverviewType.False_,
-            geometries = py_osrm.RouteGeometriesType.Polyline6,
+            overview = "false",
+            geometries = "polyline6",
             steps = True
         )
         res = osrm.Route(route_params)
@@ -109,10 +109,10 @@ class TestRoute:
         route_params = py_osrm.RouteParameters(
             coordinates = two_test_coordinates,
             continue_straight = False,
-            overview = py_osrm.RouteOverviewType.False_,
-            geometries = py_osrm.RouteGeometriesType.Polyline,
+            overview = "false",
+            geometries = "polyline",
             steps = True,
-            annotations = [py_osrm.RouteAnnotationsType.Speed],            
+            annotations = ["speed"],            
         )
         res = self.osrm.Route(route_params)
         assert(res["routes"])
@@ -141,12 +141,10 @@ class TestRoute:
         route_params = py_osrm.RouteParameters(
             coordinates = two_test_coordinates,
             continue_straight = False,
-            overview = py_osrm.RouteOverviewType.False_,
-            geometries = py_osrm.RouteGeometriesType.Polyline,
+            overview = "false",
+            geometries = "polyline",
             steps = True,
-            annotations = [py_osrm.RouteAnnotationsType.Duration, 
-                           py_osrm.RouteAnnotationsType.Distance, 
-                           py_osrm.RouteAnnotationsType.Nodes],            
+            annotations = ["duration", "distance", "nodes"],            
         )
         res = self.osrm.Route(route_params)
         assert(res["routes"])
@@ -175,10 +173,10 @@ class TestRoute:
         route_params = py_osrm.RouteParameters(
             coordinates = two_test_coordinates,
             continue_straight = False,
-            overview = py_osrm.RouteOverviewType.False_,
-            geometries = py_osrm.RouteGeometriesType.Polyline,
+            overview = "false",
+            geometries = "polyline",
             steps = True,
-            annotations = [py_osrm.RouteAnnotationsType.All],            
+            annotations = ["all"],            
         )
         res = self.osrm.Route(route_params)
         assert(res["routes"])
@@ -313,7 +311,7 @@ class TestRoute:
         route_params = py_osrm.RouteParameters(
             coordinates = [(7.448205209414596,43.754001097311544),
                            (7.447122039202185,43.75306156811368)],
-            snapping = py_osrm.SnappingType.Any
+            snapping = "any"
         )
         res = self.osrm.Route(route_params)
         assert(round(res["routes"][0]["distance"] * 10) == 1315)

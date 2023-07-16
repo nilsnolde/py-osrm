@@ -16,7 +16,7 @@ class TestTable:
     def test_table_annotations(self):
         table_params = py_osrm.TableParameters(
             coordinates = [three_test_coordinates[0], three_test_coordinates[1]],
-            annotations = [py_osrm.TableAnnotationsType.Distance]
+            annotations = ["distance"]
         )
         res = self.osrm.Table(table_params)
         assert(res["distances"])
@@ -24,7 +24,7 @@ class TestTable:
 
         table_params = py_osrm.TableParameters(
             coordinates = [three_test_coordinates[0], three_test_coordinates[1]],
-            annotations = [py_osrm.TableAnnotationsType.Duration]
+            annotations = ["duration"]
         )
         res = self.osrm.Table(table_params)
         assert(res["durations"])
@@ -32,7 +32,7 @@ class TestTable:
 
         table_params = py_osrm.TableParameters(
             coordinates = [three_test_coordinates[0], three_test_coordinates[1]],
-            annotations = [py_osrm.TableAnnotationsType.Duration, py_osrm.TableAnnotationsType.Distance]
+            annotations = ["duration", "distance"]
         )
         res = self.osrm.Table(table_params)
         assert(res["durations"])
@@ -48,13 +48,13 @@ class TestTable:
     def test_table_snapping(self):
         table_params = py_osrm.TableParameters(
             coordinates = [three_test_coordinates[0], three_test_coordinates[1]],
-            snapping = py_osrm.SnappingType.Any
+            snapping = "any"
         )
         res = self.osrm.Table(table_params)
         assert(res["durations"])
 
     # def test_table_annotation(self):
-    #     tables = [py_osrm.TableAnnotationsType.Distance, py_osrm.TableAnnotationsType.Duration]
+    #     tables = ["distance", "duration"]
 
     #     for annotation in tables:
     #         table_params = py_osrm.TableParameters(
@@ -101,7 +101,7 @@ class TestTable:
     def test_table_withoutwaypoints(self):
         table_params = py_osrm.TableParameters(
             coordinates = two_test_coordinates,
-            annotations = [py_osrm.TableAnnotationsType.Duration]
+            annotations = ["duration"]
         )
         table_params.skip_waypoints = True
         res = self.osrm.Table(table_params)
@@ -111,9 +111,9 @@ class TestTable:
     def test_table_fallbackspeeds(self):
         table_params = py_osrm.TableParameters(
             coordinates = two_test_coordinates,
-            annotations = [py_osrm.TableAnnotationsType.Duration],
+            annotations = ["duration"],
             fallback_speed = 1,
-            fallback_coordinate_type = py_osrm.TableFallbackCoordinateType.Input
+            fallback_coordinate_type = "input"
         )
         res = self.osrm.Table(table_params)
         assert(len(res["destinations"]) == 2)
@@ -127,7 +127,7 @@ class TestTable:
         )
         table_params = py_osrm.TableParameters(
             coordinates = two_test_coordinates,
-            annotations = [py_osrm.TableAnnotationsType.Duration],
+            annotations = ["duration"],
             fallback_speed = -1
         )
         with pytest.raises(RuntimeError) as ex:
@@ -145,7 +145,7 @@ class TestTable:
         )
         table_params = py_osrm.TableParameters(
             coordinates = two_test_coordinates,
-            annotations = [py_osrm.TableAnnotationsType.Duration],
+            annotations = ["duration"],
             scale_factor = -1
         )
         with pytest.raises(RuntimeError) as ex:

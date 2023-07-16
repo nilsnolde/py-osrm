@@ -55,7 +55,7 @@ class TestTrip:
         osrm = py_osrm.OSRM()
         trip_parameters = py_osrm.TripParameters(
             coordinates = two_test_coordinates,
-            geometries = py_osrm.RouteGeometriesType.GeoJSON
+            geometries = "geojson"
         )
         res = osrm.Trip(trip_parameters)
         for trip in res["trips"]:
@@ -66,8 +66,8 @@ class TestTrip:
         trip_parameters = py_osrm.TripParameters(
             coordinates = two_test_coordinates,
             steps = True,
-            annotations = [py_osrm.RouteAnnotationsType.Speed],
-            overview = py_osrm.RouteOverviewType.False_
+            annotations = ["speed"],
+            overview = "false"
         )
         res = osrm.Trip(trip_parameters)
         for trip in res["trips"]:
@@ -87,10 +87,8 @@ class TestTrip:
         trip_params = py_osrm.TripParameters(
             coordinates = two_test_coordinates,
             steps = True,
-            annotations = [py_osrm.RouteAnnotationsType.Duration, 
-                           py_osrm.RouteAnnotationsType.Distance, 
-                           py_osrm.RouteAnnotationsType.Nodes],     
-            overview = py_osrm.RouteOverviewType.False_
+            annotations = ["duration", "distance", "nodes"],     
+            overview = "false"
         )
         res = self.osrm.Trip(trip_params)
         assert(len(res["trips"]) == 1)
@@ -111,8 +109,8 @@ class TestTrip:
         trip_params = py_osrm.TripParameters(
             coordinates = two_test_coordinates,
             steps = True,
-            annotations = [py_osrm.RouteAnnotationsType.All],
-            overview = py_osrm.RouteOverviewType.False_        
+            annotations = ["all"],
+            overview = "false"        
         )
         res = self.osrm.Trip(trip_params)
         assert(len(res["trips"]) == 1)

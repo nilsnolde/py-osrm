@@ -1,6 +1,7 @@
 #include "parameters/tripparameter_nb.h"
 
 #include "engine/api/trip_parameters.hpp"
+#include "utility/param_utility.h"
 
 #include <nanobind/nanobind.h>
 #include <nanobind/stl/string.h>
@@ -27,68 +28,66 @@ void init_TripParameters(nb::module_& m) {
     nb::class_<TripParameters, RouteParameters>(m, "TripParameters")
         .def(nb::init<>())
         .def("__init__", [](TripParameters* t,
-                TripParameters::SourceType source,
-                TripParameters::DestinationType destination,
+                const std::string& source,
+                const std::string& destination,
                 bool,
                     const bool steps,
                     int number_of_alternatives,
-                    const std::vector<RouteParameters::AnnotationsType>& annotations,
-                    const RouteParameters::GeometriesType geometries,
-                    const RouteParameters::OverviewType overview,
+                    const std::vector<std::string>& annotations,
+                    const std::string& geometries,
+                    const std::string& overview,
                     const boost::optional<bool> continue_straight,
                     std::vector<std::size_t> waypoints,
                     std::vector<osrm::util::Coordinate> coordinates,
                     std::vector<boost::optional<osrm::engine::Hint>> hints,
                     std::vector<boost::optional<double>> radiuses,
                     std::vector<boost::optional<osrm::engine::Bearing>> bearings,
-                    std::vector<boost::optional<osrm::engine::Approach>> approaches,
+                    const std::vector<std::string*>& approaches,
                     bool generate_hints,
                     std::vector<std::string> exclude,
-                    const BaseParameters::SnappingType snapping
+                    const std::string& snapping
             ) {
                 new (t) TripParameters();
 
-                t->source = source;
-                t->destination = destination;
+                t->source = osrm_nb_util::get_tripsource_type(source);
+                t->destination = osrm_nb_util::get_tripdestination_type(destination);
 
                 t->steps = steps;
                 t->alternatives = (bool)number_of_alternatives;
                 t->number_of_alternatives = number_of_alternatives;
                 t->annotations = !annotations.empty();
-                for(int i = 0; i < annotations.size(); ++i) {
-                    t->annotations_type = t->annotations_type | annotations[i];
-                }           
-                t->geometries = geometries;
-                t->overview = overview;
+                t->annotations_type = osrm_nb_util::get_routeannotations_type(annotations);         
+                t->geometries = osrm_nb_util::get_geometries_type(geometries);
+                t->overview = osrm_nb_util::get_overview_type(overview);
                 t->continue_straight = continue_straight;
                 t->waypoints = std::move(waypoints);
                 t->coordinates = std::move(coordinates);
                 t->hints = std::move(hints);
                 t->radiuses = std::move(radiuses);
                 t->bearings = std::move(bearings);
-                t->approaches = std::move(approaches);
+                t->approaches = std::move(osrm_nb_util::get_approach(approaches));
                 t->generate_hints = generate_hints;
                 t->exclude = std::move(exclude);
-                t->snapping = snapping;
+                t->snapping = osrm_nb_util::get_snapping_type(snapping);
             },
-                "source"_a = TripParameters::SourceType::Any,
-                "destination"_a = TripParameters::DestinationType::Any,
+                "source"_a = std::string(),
+                "destination"_a = std::string(),
                 "roundtrip"_a = true,
                     "steps"_a = false,
                     "alternatives"_a = 0,
                     "annotations"_a = std::vector<RouteParameters::AnnotationsType>(),
-                    "geometries"_a = RouteParameters::GeometriesType::Polyline,
-                    "overview"_a = RouteParameters::OverviewType::Simplified,
+                    "geometries"_a = std::string(),
+                    "overview"_a = std::string(),
                     "continue_straight"_a = boost::optional<bool>(),
                     "waypoints"_a = std::vector<std::size_t>(),
                     "coordinates"_a = std::vector<osrm::util::Coordinate>(),
                     "hints"_a = std::vector<boost::optional<osrm::engine::Hint>>(),
                     "radiuses"_a = std::vector<boost::optional<double>>(),
                     "bearings"_a = std::vector<boost::optional<osrm::engine::Bearing>>(),
-                    "approaches"_a = std::vector<boost::optional<osrm::engine::Approach>>(),
+                    "approaches"_a = std::vector<std::string*>(),
                     "generate_hints"_a = true,
                     "exclude"_a = std::vector<std::string>(),
-                    "snapping"_a = BaseParameters::SnappingType::Default
+                    "snapping"_a = std::string()
             )
         .def_rw("source", &TripParameters::source)
         .def_rw("destination", &TripParameters::destination)

@@ -45,7 +45,7 @@ class TestMatch:
     def test_match_no_geometrycompression(self):
         match_params = py_osrm.MatchParameters(
             coordinates = three_test_coordinates,
-            geometries = py_osrm.RouteGeometriesType.GeoJSON
+            geometries = "geojson"
         )
         res = self.osrm.Match(match_params)
         assert(len(res["matchings"]) == 1)
@@ -66,9 +66,9 @@ class TestMatch:
             timestamps = [1424684612, 1424684616, 1424684620],
             radiuses = [4.07, 4.07, 4.07],
             steps = True,
-            annotations = [py_osrm.RouteAnnotationsType.Speed],
-            overview = py_osrm.RouteOverviewType.False_,
-            geometries = py_osrm.RouteGeometriesType.GeoJSON
+            annotations = ["speed"],
+            overview = "false",
+            geometries = "geojson"
         )
         res = self.osrm.Match(match_params)
         assert(len(res["matchings"]) == 1)
@@ -91,11 +91,9 @@ class TestMatch:
             timestamps = [1424684612, 1424684616, 1424684620],
             radiuses = [4.07, 4.07, 4.07],
             steps = True,
-            annotations = [py_osrm.RouteAnnotationsType.Duration, 
-                           py_osrm.RouteAnnotationsType.Distance, 
-                           py_osrm.RouteAnnotationsType.Nodes],
-            overview = py_osrm.RouteOverviewType.False_,
-            geometries = py_osrm.RouteGeometriesType.GeoJSON
+            annotations = ["duration", "distance", "nodes"],
+            overview = "false",
+            geometries = "geojson"
         )
         res = self.osrm.Match(match_params)
         assert(len(res["matchings"]) == 1)
@@ -117,10 +115,10 @@ class TestMatch:
             timestamps = [1424684612, 1424684616, 1424684620],
             radiuses = [4.07, 4.07, 4.07],
             steps = True,
-            annotations = [py_osrm.RouteAnnotationsType.All],
-            overview = py_osrm.RouteOverviewType.False_,
-            geometries = py_osrm.RouteGeometriesType.GeoJSON,
-            gaps = py_osrm.MatchGapsType.Split,
+            annotations = ["all"],
+            overview = "false",
+            geometries = "geojson",
+            gaps = "split",
             tidy = False
         )
         res = self.osrm.Match(match_params)

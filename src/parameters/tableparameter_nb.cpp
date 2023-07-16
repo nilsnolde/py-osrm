@@ -1,6 +1,7 @@
 #include "parameters/tableparameter_nb.h"
 
 #include "engine/api/table_parameters.hpp"
+#include "utility/param_utility.h"
 
 #include <nanobind/nanobind.h>
 #include <nanobind/operators.h>
@@ -44,54 +45,51 @@ void init_TableParameters(nb::module_& m) {
         .def("__init__", [](TableParameters* t,
                 std::vector<std::size_t> sources,
                 std::vector<std::size_t> destinations,
-                const std::vector<TableParameters::AnnotationsType>& annotations,
+                const std::vector<std::string>& annotations,
                 double fallback_speed,
-                TableParameters::FallbackCoordinateType fallback_coordinate_type,
+                const std::string& fallback_coordinate_type,
                 double scale_factor,
                     std::vector<osrm::util::Coordinate> coordinates,
                     std::vector<boost::optional<osrm::engine::Hint>> hints,
                     std::vector<boost::optional<double>> radiuses,
                     std::vector<boost::optional<osrm::engine::Bearing>> bearings,
-                    std::vector<boost::optional<osrm::engine::Approach>> approaches,
+                    const std::vector<std::string*>& approaches,
                     bool generate_hints,
                     std::vector<std::string> exclude,
-                    const BaseParameters::SnappingType snapping
+                    const std::string& snapping
             ) {
                 new (t) TableParameters();
 
                 t->sources = std::move(sources);
                 t->destinations = std::move(destinations);
-                t->annotations = TableParameters::AnnotationsType::None;
-                for(int i = 0; i < annotations.size(); ++i) {
-                    t->annotations = t->annotations | annotations[i];
-                }
+                t->annotations = osrm_nb_util::get_tableannotations_type(annotations);
                 t->fallback_speed = fallback_speed;
-                t->fallback_coordinate_type = fallback_coordinate_type;
+                t->fallback_coordinate_type = osrm_nb_util::get_fallbackcoordinate_type(fallback_coordinate_type);
                 t->scale_factor = scale_factor;
 
                 t->coordinates = std::move(coordinates);
                 t->hints = std::move(hints);
                 t->radiuses = std::move(radiuses);
                 t->bearings = std::move(bearings);
-                t->approaches = std::move(approaches);
+                t->approaches = std::move(osrm_nb_util::get_approach(approaches));
                 t->generate_hints = generate_hints;
                 t->exclude = std::move(exclude);
-                t->snapping = snapping;
+                t->snapping = osrm_nb_util::get_snapping_type(snapping);
             },
                 "sources"_a = std::vector<std::size_t>(),
                 "destinations"_a = std::vector<std::size_t>(),
-                "annotations"_a = std::vector<TableParameters::AnnotationsType>{TableParameters::AnnotationsType::Duration},
+                "annotations"_a = std::vector<std::string>(),
                 "fallback_speed"_a = osrm::from_alias<double>(INVALID_FALLBACK_SPEED),
-                "fallback_coordinate_type"_a = TableParameters::FallbackCoordinateType::Input,
+                "fallback_coordinate_type"_a = std::string(),
                 "scale_factor"_a = 1.0,
                     "coordinates"_a = std::vector<osrm::util::Coordinate>(),
                     "hints"_a = std::vector<boost::optional<osrm::engine::Hint>>(),
                     "radiuses"_a = std::vector<boost::optional<double>>(),
                     "bearings"_a = std::vector<boost::optional<osrm::engine::Bearing>>(),
-                    "approaches"_a = std::vector<boost::optional<osrm::engine::Approach>>(),
+                    "approaches"_a = std::vector<std::string*>(),
                     "generate_hints"_a = true,
                     "exclude"_a = std::vector<std::string>(),
-                    "snapping"_a = BaseParameters::SnappingType::Default
+                    "snapping"_a = std::string()
             )
         .def_rw("sources", &TableParameters::sources)
         .def_rw("destinations", &TableParameters::destinations)

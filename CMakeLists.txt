@@ -37,6 +37,8 @@ set(SRCS
   src/osrm_nb.cpp
   src/engineconfig_nb.cpp
   src/utility/osrm_utility.cpp
+  src/utility/param_utility.cpp
+  src/utility/param_kwargs.cpp
 
   src/parameters/baseparameter_nb.cpp
   src/parameters/routeparameter_nb.cpp
