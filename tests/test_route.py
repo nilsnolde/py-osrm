@@ -129,10 +129,10 @@ class TestRoute:
                    and not l["annotation"]["distance"] 
                    and not l["annotation"]["nodes"])
             
-        route_params.overview = py_osrm.RouteOverviewType.Full
+        route_params.overview = "full"
         full_res = self.osrm.Route(route_params)
 
-        route_params.overview = py_osrm.RouteOverviewType.Simplified
+        route_params.overview = "simplified"
         simplified_res = self.osrm.Route(route_params)
         
         assert(full_res["routes"][0]["geometry"] != simplified_res["routes"][0]["geometry"])
@@ -161,10 +161,10 @@ class TestRoute:
                    and not l["annotation"]["datasources"] 
                    and not l["annotation"]["speed"])
             
-        route_params.overview = py_osrm.RouteOverviewType.Full
+        route_params.overview = "full"
         full_res = self.osrm.Route(route_params)
 
-        route_params.overview = py_osrm.RouteOverviewType.Simplified
+        route_params.overview = "simplified"
         simplified_res = self.osrm.Route(route_params)
         
         assert(full_res["routes"][0]["geometry"] != simplified_res["routes"][0]["geometry"])
@@ -193,10 +193,10 @@ class TestRoute:
                    and l["annotation"]["datasources"] 
                    and l["annotation"]["speed"])
             
-        route_params.overview = py_osrm.RouteOverviewType.Full
+        route_params.overview = "full"
         full_res = self.osrm.Route(route_params)
 
-        route_params.overview = py_osrm.RouteOverviewType.Simplified
+        route_params.overview = "simplified"
         simplified_res = self.osrm.Route(route_params)
         
         assert(full_res["routes"][0]["geometry"] != simplified_res["routes"][0]["geometry"])

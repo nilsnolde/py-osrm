@@ -8,6 +8,9 @@
 #include "engine/api/table_parameters.hpp"
 #include "engine/api/trip_parameters.hpp"
 
+#include <boost/optional.hpp>
+
+#include <unordered_map>
 #include <vector>
 
 using osrm::engine::Approach;
@@ -19,22 +22,50 @@ using osrm::engine::api::TripParameters;
 
 namespace osrm_nb_util {
 
-std::vector<boost::optional<osrm::engine::Approach>> get_approach(const std::vector<std::string*>& approach_strs);
+template<typename T>
+T str_to_enum(const std::string& str, const std::string& type_name, const std::unordered_map<std::string, T>& enum_map) {
+    auto itr = enum_map.find(str);
 
-BaseParameters::SnappingType get_snapping_type(const std::string& snapping_str);
-BaseParameters::OutputFormatType get_format_type(const std::string& format_str);
+    if(itr != enum_map.end()) {
+        return itr->second;
+    }
 
-RouteParameters::AnnotationsType get_routeannotations_type(const std::vector<std::string>& annotation_strs);
-RouteParameters::GeometriesType get_geometries_type(const std::string& geometries_str);
-RouteParameters::OverviewType get_overview_type(const std::string& overview_str);
+    throw std::invalid_argument("Invalid " + type_name + ": " + str);
+}
 
-MatchParameters::GapsType get_gaps_type(const std::string& gaps_str);
+template<typename T>
+std::string enum_to_str(T enum_type, const std::string& type_name, const std::unordered_map<std::string, T>& enum_map) {
+    for(const auto& itr : enum_map) {
+        if(itr.second == enum_type) {
+            return itr.first;
+        }
+    }
 
-TableParameters::FallbackCoordinateType get_fallbackcoordinate_type(const std::string& fallbackcoord_str);
-TableParameters::AnnotationsType get_tableannotations_type(const std::vector<std::string>& strs);
+    throw std::invalid_argument("Undefined " + type_name + " Enum"); 
+}
 
-TripParameters::SourceType get_tripsource_type(const std::string& tripsource_str);
-TripParameters::DestinationType get_tripdestination_type(const std::string& tripdestination_str);
+void assign_baseparameters(BaseParameters* params,
+                           std::vector<osrm::util::Coordinate> coordinates,
+                           std::vector<boost::optional<osrm::engine::Hint>> hints,
+                           std::vector<boost::optional<double>> radiuses,
+                           std::vector<boost::optional<osrm::engine::Bearing>> bearings,
+                           const std::vector<boost::optional<osrm::engine::Approach>>& approaches,
+                           bool generate_hints,
+                           std::vector<std::string> exclude,
+                           const BaseParameters::SnappingType snapping);
+                        
+void assign_routeparameters(RouteParameters* params,
+                            const bool steps,
+                            int number_of_alternatives,
+                            const std::vector<RouteParameters::AnnotationsType>& annotations,
+                            RouteParameters::GeometriesType geometries,
+                            RouteParameters::OverviewType overview,
+                            const boost::optional<bool> continue_straight,
+                            std::vector<std::size_t> waypoints);
+
+RouteParameters::AnnotationsType calculate_routeannotations_type(const std::vector<RouteParameters::AnnotationsType>& annotations);
+
+TableParameters::AnnotationsType calculate_tableannotations_type(const std::vector<TableParameters::AnnotationsType>& annotations);
 
 } //namespace osrm_nb_util
 

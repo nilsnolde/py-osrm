@@ -15,66 +15,42 @@ void init_TableParameters(nb::module_& m) {
     using osrm::engine::api::BaseParameters;
     using osrm::engine::api::TableParameters;
 
-    nb::enum_<TableParameters::FallbackCoordinateType>(m, "TableFallbackCoordinateType", nb::is_arithmetic())
-        .value("Input", TableParameters::FallbackCoordinateType::Input)
-        .value("Snapped", TableParameters::FallbackCoordinateType::Snapped)
-        .export_values();
-
-    nb::enum_<TableParameters::AnnotationsType>(m, "TableAnnotationsType", nb::is_arithmetic())
-        .value("None_", TableParameters::AnnotationsType::None)
-        .value("Duration", TableParameters::AnnotationsType::Duration)
-        .value("Distance", TableParameters::AnnotationsType::Distance)
-        .value("All", TableParameters::AnnotationsType::All)
-        .export_values()
-        .def("__and__", [](TableParameters::AnnotationsType lhs, TableParameters::AnnotationsType rhs) {
-            return static_cast<bool>(
-                static_cast<std::underlying_type_t<TableParameters::AnnotationsType>>(lhs) &
-                static_cast<std::underlying_type_t<TableParameters::AnnotationsType>>(rhs));
-        }, nb::is_operator())
-        .def("__or__", [](TableParameters::AnnotationsType lhs, TableParameters::AnnotationsType rhs) {
-            return (TableParameters::AnnotationsType)(
-                static_cast<std::underlying_type_t<TableParameters::AnnotationsType>>(lhs) |
-                static_cast<std::underlying_type_t<TableParameters::AnnotationsType>>(rhs));
-        }, nb::is_operator())
-        .def("__ior__", [](TableParameters::AnnotationsType& lhs, TableParameters::AnnotationsType rhs) {
-            return lhs = lhs | rhs;
-        }, nb::is_operator());
-
     nb::class_<TableParameters, BaseParameters>(m, "TableParameters")
         .def(nb::init<>())
         .def("__init__", [](TableParameters* t,
                 std::vector<std::size_t> sources,
                 std::vector<std::size_t> destinations,
-                const std::vector<std::string>& annotations,
+                const std::vector<TableParameters::AnnotationsType>& annotations,
                 double fallback_speed,
-                const std::string& fallback_coordinate_type,
+                TableParameters::FallbackCoordinateType fallback_coordinate_type,
                 double scale_factor,
                     std::vector<osrm::util::Coordinate> coordinates,
                     std::vector<boost::optional<osrm::engine::Hint>> hints,
                     std::vector<boost::optional<double>> radiuses,
                     std::vector<boost::optional<osrm::engine::Bearing>> bearings,
-                    const std::vector<std::string*>& approaches,
+                    const std::vector<boost::optional<osrm::engine::Approach>>& approaches,
                     bool generate_hints,
                     std::vector<std::string> exclude,
-                    const std::string& snapping
+                    const BaseParameters::SnappingType snapping
             ) {
                 new (t) TableParameters();
 
                 t->sources = std::move(sources);
                 t->destinations = std::move(destinations);
-                t->annotations = osrm_nb_util::get_tableannotations_type(annotations);
+                t->annotations = osrm_nb_util::calculate_tableannotations_type(annotations);
                 t->fallback_speed = fallback_speed;
-                t->fallback_coordinate_type = osrm_nb_util::get_fallbackcoordinate_type(fallback_coordinate_type);
+                t->fallback_coordinate_type = fallback_coordinate_type;
                 t->scale_factor = scale_factor;
-
-                t->coordinates = std::move(coordinates);
-                t->hints = std::move(hints);
-                t->radiuses = std::move(radiuses);
-                t->bearings = std::move(bearings);
-                t->approaches = std::move(osrm_nb_util::get_approach(approaches));
-                t->generate_hints = generate_hints;
-                t->exclude = std::move(exclude);
-                t->snapping = osrm_nb_util::get_snapping_type(snapping);
+                
+                osrm_nb_util::assign_baseparameters(t,
+                                                    coordinates,
+                                                    hints,
+                                                    radiuses,
+                                                    bearings,
+                                                    approaches,
+                                                    generate_hints,
+                                                    exclude,
+                                                    snapping);
             },
                 "sources"_a = std::vector<std::size_t>(),
                 "destinations"_a = std::vector<std::size_t>(),
@@ -98,4 +74,33 @@ void init_TableParameters(nb::module_& m) {
         .def_rw("annotations", &TableParameters::annotations)
         .def_rw("scale_factor", &TableParameters::scale_factor)
         .def("IsValid", &TableParameters::IsValid);
+
+    nb::class_<TableParameters::FallbackCoordinateType>(m, "TableFallbackCoordinateType")
+        .def("__init__", [](TableParameters::FallbackCoordinateType* t, const std::string& str) {
+            TableParameters::FallbackCoordinateType fallback = osrm_nb_util::str_to_enum(str, "TableFallbackCoordinateType", fallback_map);
+            new (t) TableParameters::FallbackCoordinateType(fallback);
+        })
+        .def("__repr__", [](TableParameters::FallbackCoordinateType type) {
+            return osrm_nb_util::enum_to_str(type, "TableFallbackCoordinateType", fallback_map);
+        });
+    nb::implicitly_convertible<std::string, TableParameters::FallbackCoordinateType>();
+
+    nb::class_<TableParameters::AnnotationsType>(m, "TableAnnotationsType")
+        .def("__init__", [](TableParameters::AnnotationsType* t, const std::string& str) {
+            TableParameters::AnnotationsType annotation = osrm_nb_util::str_to_enum(str, "TableAnnotationsType", table_annotations_map);
+            new (t) TableParameters::AnnotationsType(annotation);
+        })
+        .def("__repr__", [](TableParameters::AnnotationsType type) {
+            return std::to_string((int)type);
+        })
+        .def("__and__", [](TableParameters::AnnotationsType lhs, TableParameters::AnnotationsType rhs) {
+            return lhs & rhs;
+        }, nb::is_operator())
+        .def("__or__", [](TableParameters::AnnotationsType lhs, TableParameters::AnnotationsType rhs) {
+            return lhs | rhs;
+        }, nb::is_operator())
+        .def("__ior__", [](TableParameters::AnnotationsType& lhs, TableParameters::AnnotationsType rhs) {
+            return lhs = lhs | rhs;
+        }, nb::is_operator());
+    nb::implicitly_convertible<std::string, TableParameters::AnnotationsType>();
 }

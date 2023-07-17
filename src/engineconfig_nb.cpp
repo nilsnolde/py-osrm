@@ -1,22 +1,16 @@
 #include "engineconfig_nb.h"
 
 #include "osrm/engine_config.hpp"
+#include "utility/osrm_utility.h"
+#include "utility/param_utility.h"
 
 #include <nanobind/nanobind.h>
 #include <nanobind/stl/string.h>
-
-#include "utility/osrm_utility.h"
 
 namespace nb = nanobind;
 
 void init_EngineConfig(nb::module_& m) {
     using osrm::engine::EngineConfig;
-
-    nb::enum_<EngineConfig::Algorithm>(m, "Algorithm")
-        .value("CH", EngineConfig::Algorithm::CH)
-        .value("CoreCH", EngineConfig::Algorithm::CoreCH)
-        .value("MLD", EngineConfig::Algorithm::MLD)
-        .export_values();
 
     nb::class_<EngineConfig>(m, "EngineConfig", nb::is_final())
         .def(nb::init<>())
@@ -47,4 +41,14 @@ void init_EngineConfig(nb::module_& m) {
         .def_rw("algorithm", &EngineConfig::algorithm)
         .def_rw("verbosity", &EngineConfig::verbosity)
         .def_rw("dataset_name", &EngineConfig::dataset_name);
+
+    nb::class_<EngineConfig::Algorithm>(m, "Algorithm")
+        .def("__init__", [](EngineConfig::Algorithm* t, const std::string& str) {
+            EngineConfig::Algorithm algorithm = osrm_nb_util::str_to_enum(str, "Algorithm", algorithm_map);
+            new (t) EngineConfig::Algorithm(algorithm);
+        })
+        .def("__repr__", [](EngineConfig::Algorithm type) {
+            return osrm_nb_util::enum_to_str(type, "Algorithm", algorithm_map);
+        });
+    nb::implicitly_convertible<std::string, EngineConfig::Algorithm>();
 }

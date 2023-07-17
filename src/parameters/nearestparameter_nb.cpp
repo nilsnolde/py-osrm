@@ -20,21 +20,22 @@ void init_NearestParameters(nb::module_& m) {
                 std::vector<boost::optional<osrm::engine::Hint>> hints,
                 std::vector<boost::optional<double>> radiuses,
                 std::vector<boost::optional<osrm::engine::Bearing>> bearings,
-                const std::vector<std::string*>& approaches,
+                const std::vector<boost::optional<osrm::engine::Approach>>& approaches,
                 bool generate_hints,
                 std::vector<std::string> exclude,
-                const std::string& snapping
+                const BaseParameters::SnappingType snapping
             ) {
                 new (t) NearestParameters();
                 
-                t->coordinates = std::move(coordinates);
-                t->hints = std::move(hints);
-                t->radiuses = std::move(radiuses);
-                t->bearings = std::move(bearings);
-                t->approaches = std::move(osrm_nb_util::get_approach(approaches));
-                t->generate_hints = generate_hints;
-                t->exclude = std::move(exclude);
-                t->snapping = osrm_nb_util::get_snapping_type(snapping);
+                osrm_nb_util::assign_baseparameters(t,
+                                                    coordinates,
+                                                    hints,
+                                                    radiuses,
+                                                    bearings,
+                                                    approaches,
+                                                    generate_hints,
+                                                    exclude,
+                                                    snapping);
             },
                 "coordinates"_a = std::vector<osrm::util::Coordinate>(),
                 "hints"_a = std::vector<boost::optional<osrm::engine::Hint>>(),

@@ -8,6 +8,8 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+set(CMAKE_BUILD_TYPE Debug)
+
 if(NOT SKBUILD)
   message(WARNING
   "This CMake file is meant to be executed using 'scikit-build-core'.
@@ -38,7 +40,6 @@ set(SRCS
   src/engineconfig_nb.cpp
   src/utility/osrm_utility.cpp
   src/utility/param_utility.cpp
-  src/utility/param_kwargs.cpp
 
   src/parameters/baseparameter_nb.cpp
   src/parameters/routeparameter_nb.cpp

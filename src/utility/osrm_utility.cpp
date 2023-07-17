@@ -3,6 +3,8 @@
 #include "osrm/osrm.hpp"
 #include "osrm/engine_config.hpp"
 #include "osrm/status.hpp"
+
+#include "engineconfig_nb.h"
 #include "util/json_container.hpp"
 
 #include <nanobind/nanobind.h>
@@ -43,9 +45,9 @@ void check_status(osrm::engine::Status status, osrm::util::json::Object& res) {
 void populate_cfg_from_kwargs(const nb::kwargs& kwargs, EngineConfig& config) {
     std::unordered_map<std::string, std::function<void(const std::pair<nb::handle, nb::handle>&)>> assign_map {
         { "storage_config", [&config](const std::pair<nb::handle, nb::handle>& val) {
-            std::string temp;
-            assign_val(temp, val);
-            config.storage_config = osrm::storage::StorageConfig(temp);
+            std::string str;
+            assign_val(str, val);
+            config.storage_config = osrm::storage::StorageConfig(str);
         } },
         { "max_locations_trip", [&config](const std::pair<nb::handle, nb::handle>& val) {
             assign_val(config.max_locations_trip, val);
@@ -68,14 +70,14 @@ void populate_cfg_from_kwargs(const nb::kwargs& kwargs, EngineConfig& config) {
         { "default_radius", [&config](const std::pair<nb::handle, nb::handle>& val) {
             try {
                 const std::string rad_val = nb::cast<std::string>(val.second);
-                if(rad_val == "unlimited" || rad_val == "UNLIMITED") {
-                    config.default_radius = UNLIMITED;
-                }
-                else {
+
+                if(!(rad_val == "unlimited" || rad_val == "UNLIMITED")) {
                     throw std::runtime_error("default_radius must be a float value or 'unlimited'");
                 }
+
+                config.default_radius = UNLIMITED;
             }
-            catch(nb::cast_error) {
+            catch(const nb::cast_error&) {
                 assign_val(config.default_radius.get(), val);
             }
         } },
@@ -86,29 +88,24 @@ void populate_cfg_from_kwargs(const nb::kwargs& kwargs, EngineConfig& config) {
             assign_val(config.use_shared_memory, val);
         } },
         { "memory_file", [&config](const std::pair<nb::handle, nb::handle>& val) {
-            std::string temp;
-            assign_val(temp, val);
-            config.memory_file = boost::filesystem::path(temp);
+            std::string str;
+            assign_val(str, val);
+            config.memory_file = boost::filesystem::path(str);
         } },
         { "use_mmap", [&config](const std::pair<nb::handle, nb::handle>& val) {
             assign_val(config.use_mmap, val);
         } },
         { "algorithm", [&config](const std::pair<nb::handle, nb::handle>& val) {
-            std::string algorithm_string;
-            assign_val(algorithm_string, val);
+            std::string str;
+            assign_val(str, val);
 
-            if(algorithm_string == "ch" || algorithm_string == "CH") {
-                config.algorithm = EngineConfig::Algorithm::CH;
-            }
-            else if(algorithm_string == "corech" || algorithm_string == "CoreCH") {
-                config.algorithm = EngineConfig::Algorithm::CoreCH;
-            }
-            else if(algorithm_string == "mld" || algorithm_string == "MLD") {
-                config.algorithm = EngineConfig::Algorithm::MLD;
-            }
-            else {
+            auto itr = algorithm_map.find(str);
+
+            if(itr == algorithm_map.end()) {
                 throw std::invalid_argument("Algorithm option must be one of 'CH', 'CoreCH', or 'MLD'");
             }
+
+            config.algorithm = itr->second;
         } },
         { "verbosity", [&config](const std::pair<nb::handle, nb::handle>& val) {
             assign_val(config.verbosity, val);
