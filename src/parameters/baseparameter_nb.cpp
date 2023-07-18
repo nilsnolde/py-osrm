@@ -1,6 +1,7 @@
 #include "parameters/baseparameter_nb.h"
 
 #include "engine/api/base_parameters.hpp"
+#include "utility/param_utility.h"
 
 #include <nanobind/nanobind.h>
 #include <nanobind/stl/string.h>
@@ -12,36 +13,7 @@ using namespace nb::literals;
 void init_BaseParameters(nb::module_& m) {
     using osrm::engine::api::BaseParameters;
 
-    nb::enum_<BaseParameters::SnappingType>(m, "SnappingType")
-        .value("Default", BaseParameters::SnappingType::Default)
-        .value("Any", BaseParameters::SnappingType::Any)
-        .export_values();
-
-    nb::enum_<BaseParameters::OutputFormatType>(m, "OutputFormatType")
-        .value("JSON", BaseParameters::OutputFormatType::JSON)
-        .value("FLATBUFFERS", BaseParameters::OutputFormatType::FLATBUFFERS)
-        .export_values();
-
     nb::class_<BaseParameters>(m, "BaseParameters")
-        .def(nb::init<
-                std::vector<osrm::util::Coordinate>,
-                std::vector<boost::optional<osrm::engine::Hint>>,
-                std::vector<boost::optional<double>>,
-                std::vector<boost::optional<osrm::engine::Bearing>>,
-                std::vector<boost::optional<osrm::engine::Approach>>,
-                bool,
-                std::vector<std::string>,
-                const BaseParameters::SnappingType
-            >(),
-                "coordinates"_a = std::vector<osrm::util::Coordinate>(),
-                "hints"_a = std::vector<boost::optional<osrm::engine::Hint>>(),
-                "radiuses"_a = std::vector<boost::optional<double>>(),
-                "bearings"_a = std::vector<boost::optional<osrm::engine::Bearing>>(),
-                "approaches"_a = std::vector<boost::optional<osrm::engine::Approach>>(),
-                "generate_hints"_a = true,
-                "exclude"_a = std::vector<std::string>(),
-                "snapping"_a = BaseParameters::SnappingType::Default
-            )
         .def_rw("coordinates", &BaseParameters::coordinates)
         .def_rw("hints", &BaseParameters::hints)
         .def_rw("radiuses", &BaseParameters::radiuses)
@@ -53,4 +25,24 @@ void init_BaseParameters(nb::module_& m) {
         .def_rw("skip_waypoints", &BaseParameters::skip_waypoints)
         .def_rw("snapping", &BaseParameters::snapping)
         .def("IsValid", &BaseParameters::IsValid);
+
+    nb::class_<BaseParameters::SnappingType>(m, "SnappingType")
+        .def("__init__", [](BaseParameters::SnappingType* t, const std::string& str) {
+            BaseParameters::SnappingType snapping = osrm_nb_util::str_to_enum(str, "SnappingType", snapping_map);
+            new (t) BaseParameters::SnappingType(snapping);
+        })
+        .def("__repr__", [](BaseParameters::SnappingType type) {
+            return osrm_nb_util::enum_to_str(type, "SnappingType", snapping_map);
+        });
+    nb::implicitly_convertible<std::string, BaseParameters::SnappingType>();
+
+    nb::class_<BaseParameters::OutputFormatType>(m, "OutputFormatType")
+        .def("__init__", [](BaseParameters::OutputFormatType* t, const std::string& str) {
+            BaseParameters::OutputFormatType output = osrm_nb_util::str_to_enum(str, "OutputFormatType", output_map);
+            new (t) BaseParameters::OutputFormatType(output);
+        })
+        .def("__repr__", [](BaseParameters::OutputFormatType type) {
+            return osrm_nb_util::enum_to_str(type, "OutputFormatType", output_map);
+        });
+    nb::implicitly_convertible<std::string, BaseParameters::OutputFormatType>();
 }
