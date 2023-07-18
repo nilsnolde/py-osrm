@@ -21,7 +21,7 @@ repository = "https://github.com/gis-ops/py-osrm"
 minimum-version = "0.4"
 
 # CMake build type
-cmake.build-type = "RelWithDebInfo"
+cmake.build-type = "Release"
 
 # Setuptools-style build caching in a local directory
 build-dir = "build/{wheel_tag}"
