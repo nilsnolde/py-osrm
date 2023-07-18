@@ -30,7 +30,22 @@ T str_to_enum(const std::string& str, const std::string& type_name, const std::u
         return itr->second;
     }
 
-    throw std::invalid_argument("Invalid " + type_name + ": " + str);
+    std::string valid_strs = " (Valid Options:";
+    bool first = true;
+
+    for(const auto& itr : enum_map) {
+        if(itr.first.empty()) {
+            continue;
+        }
+        if(!first) {
+            valid_strs += ", ";
+        }
+        valid_strs += " '" + itr.first + "'";
+        first = false;
+    }
+    valid_strs += ")";
+
+    throw std::invalid_argument("Invalid " + type_name + ": " + str + valid_strs);
 }
 
 template<typename T>

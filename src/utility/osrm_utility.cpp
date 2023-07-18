@@ -5,7 +5,7 @@
 #include "osrm/status.hpp"
 
 #include "engineconfig_nb.h"
-#include "util/json_container.hpp"
+#include "utility/param_utility.h"
 
 #include <nanobind/nanobind.h>
 #include <nanobind/stl/string.h>
@@ -98,14 +98,7 @@ void populate_cfg_from_kwargs(const nb::kwargs& kwargs, EngineConfig& config) {
         { "algorithm", [&config](const std::pair<nb::handle, nb::handle>& val) {
             std::string str;
             assign_val(str, val);
-
-            auto itr = algorithm_map.find(str);
-
-            if(itr == algorithm_map.end()) {
-                throw std::invalid_argument("Algorithm option must be one of 'CH', 'CoreCH', or 'MLD'");
-            }
-
-            config.algorithm = itr->second;
+            config.algorithm = osrm_nb_util::str_to_enum(str, "Algorithm", algorithm_map);
         } },
         { "verbosity", [&config](const std::pair<nb::handle, nb::handle>& val) {
             assign_val(config.verbosity, val);
