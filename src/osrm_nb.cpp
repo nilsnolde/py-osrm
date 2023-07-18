@@ -132,7 +132,7 @@ NB_MODULE(osrm_ext, m) {
 
             std::string result;
             osrm::engine::Status status = t->Tile(params, result);
-            nb::object obj = nb::bytes(result.c_str());
+            nb::object obj = nb::bytes(result.c_str(), result.size());
 
             return obj;
         })

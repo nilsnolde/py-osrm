@@ -15,7 +15,7 @@ class TestTile:
     def test_tile(self):
         tile_params = py_osrm.TileParameters(test_tile["at"])
         res = self.osrm.Tile(tile_params)
-        # assert(len(res) == test_tile["size"])
+        assert(len(res) == test_tile["size"])
 
     def test_tile_preconditions(self):
         with pytest.raises(Exception):
