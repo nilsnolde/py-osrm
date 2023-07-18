@@ -44,7 +44,7 @@ class TestIndex:
     def test_unknownalgo(self):
         with pytest.raises(ValueError) as ex:
              py_osrm.OSRM(algorithm = "Foo")
-        assert(str(ex.value) == "Invalid Algorithm: Foo (Valid Options: 'MLD',  'CoreCH',  'CH')")
+        assert(str(ex.value) == "Invalid Algorithm: Foo (Valid Options: 'MLD', 'CoreCH', 'CH')")
 
     def test_invalidalgo(self):
         with pytest.raises(RuntimeError) as ex:

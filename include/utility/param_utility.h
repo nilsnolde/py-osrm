@@ -30,7 +30,7 @@ T str_to_enum(const std::string& str, const std::string& type_name, const std::u
         return itr->second;
     }
 
-    std::string valid_strs = " (Valid Options:";
+    std::string valid_strs = " (Valid Options: ";
     bool first = true;
 
     for(const auto& itr : enum_map) {
@@ -40,7 +40,7 @@ T str_to_enum(const std::string& str, const std::string& type_name, const std::u
         if(!first) {
             valid_strs += ", ";
         }
-        valid_strs += " '" + itr.first + "'";
+        valid_strs += "'" + itr.first + "'";
         first = false;
     }
     valid_strs += ")";
