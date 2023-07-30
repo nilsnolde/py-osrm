@@ -21,7 +21,7 @@ if(NOT SKBUILD)
   )
 endif()
 
-find_package(Python 3.7
+find_package(Python 3.8
   REQUIRED COMPONENTS Interpreter Development.Module
   OPTIONAL_COMPONENTS Development.SABIModule
 )
@@ -69,30 +69,43 @@ target_include_directories(${EXT_NAME}
     ${CMAKE_CURRENT_SOURCE_DIR}/include/parameters
 )
 
-include(FetchContent)
-FetchContent_Declare(
-  libosrm
-  GIT_REPOSITORY https://github.com/Project-OSRM/osrm-backend
-  GIT_TAG master
-)
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
+find_package(LibOSRM)
 
-FetchContent_GetProperties(libosrm)
-if(NOT libosrm_POPULATED)
-  FetchContent_Populate(libosrm)
-  add_subdirectory(
-    ${libosrm_SOURCE_DIR}
-    ${libosrm_BINARY_DIR}
-    EXCLUDE_FROM_ALL
+if(LibOSRM_FOUND)
+  target_link_libraries(${EXT_NAME}
+    PRIVATE
+      ${LibOSRM_LIBRARIES}
+      ${LibOSRM_DEPENDENT_LIBRARIES}
+  )
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${LibOSRM_CXXFLAGS}")
+else()
+  include(FetchContent)
+  FetchContent_Declare(
+    libosrm
+    GIT_REPOSITORY https://github.com/Project-OSRM/osrm-backend
+    GIT_TAG master
+  )
+  SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-array-bounds -Wno-uninitialized -Wno-free-nonheap-object")
+
+  FetchContent_GetProperties(libosrm)
+  if(NOT libosrm_POPULATED)
+    FetchContent_Populate(libosrm)
+    add_subdirectory(
+      ${libosrm_SOURCE_DIR}
+      ${libosrm_BINARY_DIR}
+      EXCLUDE_FROM_ALL
+    )
+  endif()
+
+  target_include_directories(${EXT_NAME} 
+    PUBLIC
+      ${libosrm_SOURCE_DIR}/include
+  )
+  target_link_libraries(${EXT_NAME}
+    PRIVATE
+      osrm
   )
 endif()
-
-target_include_directories(${EXT_NAME} 
-  PUBLIC
-    ${libosrm_SOURCE_DIR}/include
-)
-target_link_libraries(${EXT_NAME}
-  PRIVATE
-    osrm
-)
 
 install(TARGETS ${EXT_NAME} LIBRARY DESTINATION ${PROJECT_NAME})

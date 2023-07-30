@@ -7,7 +7,7 @@ name = "py-osrm"
 version = "0.0.1"
 description = "Python bindings for the osrm-backend project"
 readme = "README.md"
-requires-python = ">=3.7"
+requires-python = ">=3.8"
 classifiers = [
     "License :: BSD",
 ]
@@ -19,9 +19,43 @@ repository = "https://github.com/gis-ops/py-osrm"
 [tool.scikit-build]
 # Protect the configuration against future changes in scikit-build-core
 minimum-version = "0.4"
-
 # Setuptools-style build caching in a local directory
 build-dir = "build/{wheel_tag}"
-
 # Build stable ABI wheels for CPython 3.12+
 wheel.py-api = "cp312"
+
+[tool.cibuildwheel]
+test-command = "pytest"
+skip = "*musllinux*"
+archs = "native"
+manylinux-x86_64-image = "ghcr.io/gis-ops/manylinux_2_28_x86_64_py-osrm"
+
+[tool.cibuildwheel.linux]
+build = "cp38-*"
+test-requires = "pytest"
+test-command = "pytest {project}/tests"
+repair-wheel-command = "LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib/intel64/gcc4.8/ auditwheel repair -w {dest_dir} {wheel}"
+before-test = "osrm-datastore ./tests/test_data/ch/monaco"
+before-all = """
+    # Install TBB &&
+        wget --tries 5 https://github.com/oneapi-src/oneTBB/releases/download/v2021.3.0/oneapi-tbb-2021.3.0-lin.tgz -O onetbb.tgz &&
+        tar zxvf onetbb.tgz &&
+        cp -a oneapi-tbb-2021.3.0/lib/. /usr/local/lib/ &&
+        cp -a oneapi-tbb-2021.3.0/include/. /usr/local/include/ &&
+        export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib/intel64/gcc4.8/ &&
+    # Install Lua 5.2 &&
+        wget --tries 5 https://www.lua.org/ftp/lua-5.2.0.tar.gz -O lua.tar.gz &&
+        tar zxf lua.tar.gz && cd lua-5.2.0 &&
+        make linux -j$(nproc) && make install &&
+        cd ../ &&
+    # Checkout osrm-backend &&
+        git clone https://github.com/Project-OSRM/osrm-backend.git --recursive &&
+        cd osrm-backend &&
+    # Modify osrm-backend CMakeLists to specify EXACT for Lua &&
+        sed -i 's/find_package(Lua 5.2 REQUIRED)/find_package(Lua 5.2 REQUIRED EXACT)/' CMakeLists.txt &&
+    # Install osrm-backend
+        mkdir build && cd build &&
+        cmake -DBUILD_ROUTED=OFF -DCMAKE_CXX_FLAGS="-Wno-array-bounds -Wno-uninitialized -Wno-free-nonheap-object" .. &&
+        make -j$(nproc) && make install &&
+        cd ../../
+    """
