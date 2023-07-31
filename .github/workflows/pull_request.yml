@@ -1,11 +1,11 @@
 name: Pull Request
 
-on: [push, pull_request]
+on: [pull_request]
 
 jobs:
   build_wheels:
-    name: PR - cp*, ubuntu-22.04
-    runs-on: ubuntu-22.04
+    name: PR - cp*, linux
+    runs-on: ubuntu-latest
 
     steps:
     - name: Checkout Project
