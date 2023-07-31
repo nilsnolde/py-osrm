@@ -7,7 +7,7 @@ name = "py-osrm"
 version = "0.0.1"
 description = "Python bindings for the osrm-backend project"
 readme = "README.md"
-requires-python = ">=3.7"
+requires-python = ">=3.8"
 classifiers = [
     "License :: BSD",
 ]
@@ -19,9 +19,20 @@ repository = "https://github.com/gis-ops/py-osrm"
 [tool.scikit-build]
 # Protect the configuration against future changes in scikit-build-core
 minimum-version = "0.4"
-
 # Setuptools-style build caching in a local directory
 build-dir = "build/{wheel_tag}"
-
 # Build stable ABI wheels for CPython 3.12+
 wheel.py-api = "cp312"
+
+[tool.cibuildwheel]
+test-command = "pytest"
+skip = "*musllinux*"
+archs = "native"
+manylinux-x86_64-image = "ghcr.io/gis-ops/manylinux:2_28_osrm_python"
+
+[tool.cibuildwheel.linux]
+build = "cp*"
+test-requires = "pytest"
+test-command = "pytest {project}/tests"
+repair-wheel-command = "LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib/intel64/gcc4.8/ auditwheel repair -w {dest_dir} {wheel}"
+before-test = "osrm-datastore ./tests/test_data/ch/monaco"
