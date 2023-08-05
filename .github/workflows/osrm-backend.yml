@@ -1,0 +1,45 @@
+name: osrm-backend
+
+on: [workflow_dispatch]
+
+jobs:
+  build_wheels:
+    name: osrm-backend, ${{ matrix.platform }}
+    runs-on: ${{ matrix.platform }}-${{ matrix.version }}
+    strategy:
+      fail-fast: true
+      matrix:
+        platform: [macos]
+        version: [latest]
+    env:
+      GITHUB_TOKEN: ${{ github.token }}
+      ARTIFACT_WORKFLOW: osrm-backend.yml
+
+    steps:
+    - name: Checkout osrm-backend
+      uses: actions/checkout@v3
+      with:
+        repository: Project-OSRM/osrm-backend
+        submodules: true
+        fetch-depth: 1
+        path: osrm-backend
+
+    - name: Build osrm-backend
+      run: |
+        brew install lua tbb
+        brew install boost@1.76 && brew link boost@1.76
+        
+        cd osrm-backend
+        mkdir build && cd build
+        cmake -DBUILD_ROUTED=OFF ..
+        make -j$((`sysctl -n hw.ncpu`+1))
+        cd ../../
+        tar -czf osrm-backend.tgz osrm-backend
+        du -h osrm-backend.tgz
+
+    - name: Archive production artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: osrm-backend
+        path: osrm-backend.tgz
+        if-no-files-found: error
