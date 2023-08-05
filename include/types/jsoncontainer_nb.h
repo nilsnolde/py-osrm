@@ -2,6 +2,7 @@
 #define OSRM_NB_JSONCONTAINER_H
 
 #include "util/json_container.hpp"
+#include <mapbox/variant.hpp>
 
 #include <nanobind/nanobind.h>
 
@@ -25,7 +26,7 @@ template <> struct type_caster<JSONValue> : type_caster_base<JSONValue> {
 
     template <typename T>
     static handle from_cpp(T&& val, rv_policy policy, cleanup_list* cleanup) noexcept {
-        return mapbox::util::apply_visitor([&](auto &&v) {
+        return mapbox::util::apply_visitor([&](auto&& v) {
             return Caster<decltype(v)>::from_cpp(std::forward<decltype(v)>(v), policy, cleanup);
         }, std::forward<T>(val));
     }

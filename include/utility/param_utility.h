@@ -33,7 +33,7 @@ T str_to_enum(const std::string& str, const std::string& type_name, const std::u
     std::string valid_strs = "(Valid Options: ";
     bool first = true;
 
-    for(const auto& itr : enum_map) {
+    for(auto itr : enum_map) {
         if(itr.first.empty()) {
             continue;
         }
@@ -50,7 +50,7 @@ T str_to_enum(const std::string& str, const std::string& type_name, const std::u
 
 template<typename T>
 std::string enum_to_str(T enum_type, const std::string& type_name, const std::unordered_map<std::string, T>& enum_map) {
-    for(const auto& itr : enum_map) {
+    for(auto itr : enum_map) {
         if(itr.second == enum_type) {
             return itr.first;
         }
