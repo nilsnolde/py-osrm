@@ -6,6 +6,7 @@
 #include <nanobind/nanobind.h>
 
 #include <unordered_map>
+#include <string>
 
 using osrm::engine::Approach;
 
