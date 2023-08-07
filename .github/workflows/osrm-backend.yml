@@ -20,18 +20,20 @@ jobs:
       uses: actions/checkout@v3
       with:
         repository: Project-OSRM/osrm-backend
+        ref: db7946d76246cb10a5710c8f2851997417940b55
         submodules: true
         fetch-depth: 1
         path: osrm-backend
 
     - name: Build osrm-backend
       run: |
-        brew install lua tbb
-        brew install boost@1.76 && brew link boost@1.76
+        export HOMEBREW_NO_AUTO_UPDATE=1 HOMEBREW_NO_INSTALL_CLEANUP=1
+        brew install lua tbb boost@1.76
+        brew link boost@1.76
         
         cd osrm-backend
         mkdir build && cd build
-        cmake -DBUILD_ROUTED=OFF ..
+        cmake ..
         make -j$((`sysctl -n hw.ncpu`+1))
         cd ../../
         tar -czf osrm-backend.tgz osrm-backend
