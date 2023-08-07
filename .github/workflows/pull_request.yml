@@ -41,7 +41,7 @@ jobs:
         CIBW_BEFORE_TEST: osrm-datastore {package}/tests/test_data/ch/monaco
 
         CIBW_ARCHS: native
-        CIBW_BUILD: cp*
+        CIBW_BUILD: cp38*
         CIBW_SKIP: "*musllinux*"
         
         CIBW_MANYLINUX_X86_64_IMAGE: ghcr.io/gis-ops/manylinux:2_28_osrm_python
@@ -53,6 +53,7 @@ jobs:
           tar -zxf osrm-backend.tgz
           cd osrm-backend/build
 
+          export HOMEBREW_NO_AUTO_UPDATE=1 HOMEBREW_NO_INSTALL_CLEANUP=1
           brew install lua tbb boost@1.76
           brew link boost@1.76
           
