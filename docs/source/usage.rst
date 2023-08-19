@@ -21,6 +21,7 @@ source:
    $ cd py-osrm
    $ pip install .
 
+
 Example
 -------
 
@@ -43,3 +44,15 @@ Example
    # Print out the Distance and Duration of the first Route
    print("Distance:", res["routes"][0]["distance"])
    print("Duration:", res["routes"][0]["duration"])
+
+
+Testing
+-------
+py_osrm tests are written for pytest, and can be run from the py_osrm directory.
+
+.. code-block:: console
+   
+   $ git clone https://github.com/gis-ops/py-osrm.git
+   $ cd py-osrm
+   $ pip install .
+   $ pytest
