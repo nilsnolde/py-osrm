@@ -14,9 +14,53 @@ using namespace nb::literals;
 void init_TableParameters(nb::module_& m) {
     using osrm::engine::api::BaseParameters;
     using osrm::engine::api::TableParameters;
+static const std::unordered_map<std::string, TableParameters::AnnotationsType> table_annotations_map {
+    { "none", TableParameters::AnnotationsType::None },
+    { std::string(), TableParameters::AnnotationsType::None },
+    { "duration", TableParameters::AnnotationsType::Duration },
+    { "distance", TableParameters::AnnotationsType::Distance },
+    { "all", TableParameters::AnnotationsType::All }
+};
 
     nb::class_<TableParameters, BaseParameters>(m, "TableParameters")
-        .def(nb::init<>())
+        .def(nb::init<>(), nb::raw_doc("Instantiates an instance of TableParameters.\n\n"
+            "Examples:\n\
+                >>> table_params = py_osrm.TableParameters(\n\
+                        coordinates = [(7.41337, 43.72956), (7.41546, 43.73077)],\n\
+                        sources = [0],\n\
+                        destinations = [1],\n\
+                        annotations = ['duration'],\n\
+                        fallback_speed = 1,\n\
+                        fallback_coordinate_type = 'input',\n\
+                        scale_factor = 0.9\n\
+                    )\n\
+                >>> table_params.IsValid()\n\
+                True\n\n"
+            "Args:\n\
+                sources (list of int): Use location with given index as source. (default [])\n\
+                destinations (list of int): Use location with given index as destination. (default [])\n\
+                annotations (list of 'none' | 'duration' | 'distance' | 'all'): \
+                    Returns additional metadata for each coordinate along the route geometry. (default [])\n\
+                fallback_speed (float): If no route found between a source/destination pair, calculate the as-the-crow-flies distance, \
+                    then use this speed to estimate duration. (default INVALID_FALLBACK_SPEED)\n\
+                fallback_coordinate_type (string 'input' | 'snapped'): When using a fallback_speed, use the user-supplied coordinate (input), \
+                    or the snapped location (snapped) for calculating distances. (default '')\n\
+                scale_factor: Scales the table duration values by this number (use in conjunction with annotations=durations). (default 1.0)\n\
+                BaseParameters (py_osrm.osrm_ext.BaseParameters): Keyword arguments from parent class.\n\n"
+            "Returns:\n\
+                __init__ (py_osrm.TableParameters): A TableParameters object, for usage in Table.\n\
+                IsValid (bool): A bool value denoting validity of parameter values.\n\n"
+            "Attributes:\n\
+                sources (list of int): Use location with given index as source.\n\
+                destinations (list of int): Use location with given index as destination.\n\
+                annotations (string): Returns additional metadata for each coordinate along the route geometry.\n\
+                fallback_speed (float): If no route found between a source/destination pair, calculate the as-the-crow-flies distance, \
+                    then use this speed to estimate duration.\n\
+                fallback_coordinate_type (string): When using a fallback_speed, use the user-supplied coordinate (input), \
+                    or the snapped location (snapped) for calculating distances.\n\
+                scale_factor: Scales the table duration values by this number (use in conjunction with annotations=durations).\n\
+                BaseParameters (py_osrm.osrm_ext.BaseParameters): Attributes from parent class."
+            ))
         .def("__init__", [](TableParameters* t,
                 std::vector<std::size_t> sources,
                 std::vector<std::size_t> destinations,
@@ -79,28 +123,28 @@ void init_TableParameters(nb::module_& m) {
         .def("__init__", [](TableParameters::FallbackCoordinateType* t, const std::string& str) {
             TableParameters::FallbackCoordinateType fallback = osrm_nb_util::str_to_enum(str, "TableFallbackCoordinateType", fallback_map);
             new (t) TableParameters::FallbackCoordinateType(fallback);
-        })
+        }, "Instantiates a FallbackCoordinateType based on provided String value.")
         .def("__repr__", [](TableParameters::FallbackCoordinateType type) {
             return osrm_nb_util::enum_to_str(type, "TableFallbackCoordinateType", fallback_map);
-        });
+        }, "Return a String based on FallbackCoordinateType value.");
     nb::implicitly_convertible<std::string, TableParameters::FallbackCoordinateType>();
 
     nb::class_<TableParameters::AnnotationsType>(m, "TableAnnotationsType")
         .def("__init__", [](TableParameters::AnnotationsType* t, const std::string& str) {
             TableParameters::AnnotationsType annotation = osrm_nb_util::str_to_enum(str, "TableAnnotationsType", table_annotations_map);
             new (t) TableParameters::AnnotationsType(annotation);
-        })
+        }, "Instantiates a AnnotationsType based on provided String value.")
         .def("__repr__", [](TableParameters::AnnotationsType type) {
             return std::to_string((int)type);
-        })
+        }, "Return a String based on AnnotationsType value.")
         .def("__and__", [](TableParameters::AnnotationsType lhs, TableParameters::AnnotationsType rhs) {
             return lhs & rhs;
-        }, nb::is_operator())
+        }, nb::is_operator(), "Return the bitwise AND result of two AnnotationsTypes.")
         .def("__or__", [](TableParameters::AnnotationsType lhs, TableParameters::AnnotationsType rhs) {
             return lhs | rhs;
-        }, nb::is_operator())
+        }, nb::is_operator(), "Return the bitwise OR result of two AnnotationsTypes.")
         .def("__ior__", [](TableParameters::AnnotationsType& lhs, TableParameters::AnnotationsType rhs) {
             return lhs = lhs | rhs;
-        }, nb::is_operator());
+        }, nb::is_operator(), "Add the bitwise OR value of another AnnotationsType.");
     nb::implicitly_convertible<std::string, TableParameters::AnnotationsType>();
 }

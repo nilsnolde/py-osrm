@@ -15,7 +15,30 @@ void init_MatchParameters(nb::module_& m) {
     using osrm::engine::api::MatchParameters;
 
     nb::class_<MatchParameters, RouteParameters>(m, "MatchParameters")
-        .def(nb::init<>())
+        .def(nb::init<>(), nb::raw_doc("Instantiates an instance of MatchParameters.\n\n"
+            "Examples:\n\
+                >>> match_params = py_osrm.MatchParameters(\n\
+                        coordinates = [(7.41337, 43.72956), (7.41546, 43.73077), (7.41862, 43.73216)],\n\
+                        timestamps = [1424684612, 1424684616, 1424684620],\n\
+                        gaps = 'split',\n\
+                        tidy = True\n\
+                    )\n\
+                >>> match_params.IsValid()\n\
+                True\n\n"
+            "Args:\n\
+                timestamps (list of unsigned int): Timestamps for the input locations in seconds since UNIX epoch. (default [])\n\
+                gaps (list of 'split' | 'ignore'): Allows the input track splitting based on huge timestamp gaps between points. (default [])\n\
+                tidy (bool): Allows the input track modification to obtain better matching quality for noisy tracks. (default False)\n\
+                RouteParameters (py_osrm.RouteParameters): Keyword arguments from parent class.\n\n"
+            "Returns:\n\
+                __init__ (py_osrm.MatchParameters): A MatchParameters object, for usage in Match.\n\
+                IsValid (bool): A bool value denoting validity of parameter values.\n\n"
+            "Attributes:\n\
+                timestamps (list of unsigned int): Timestamps for the input locations in seconds since UNIX epoch.\n\
+                gaps (string): Allows the input track splitting based on huge timestamp gaps between points.\n\
+                tidy (bool): Allows the input track modification to obtain better matching quality for noisy tracks.\n\
+                RouteParameters (py_osrm.RouteParameters): Attributes from parent class."
+            ))
         .def("__init__", [](MatchParameters* t,
                 std::vector<unsigned> timestamps,
                 MatchParameters::GapsType gaps_type,
@@ -65,7 +88,7 @@ void init_MatchParameters(nb::module_& m) {
                 "gaps"_a = std::string(),
                 "tidy"_a = false,
                     "steps"_a = false,
-                    "alternatives"_a = 0,
+                    "number_of_alternatives"_a = 0,
                     "annotations"_a = std::vector<std::string>(),
                     "geometries"_a = std::string(),
                     "overview"_a = std::string(),
@@ -89,9 +112,9 @@ void init_MatchParameters(nb::module_& m) {
         .def("__init__", [](MatchParameters::GapsType* t, const std::string& str) {
             MatchParameters::GapsType gaps = osrm_nb_util::str_to_enum(str, "MatchGapsType", gaps_map);
             new (t) MatchParameters::GapsType(gaps);
-        })
+        }, "Instantiates a GapsType based on provided String value.")
         .def("__repr__", [](MatchParameters::GapsType type) {
             return osrm_nb_util::enum_to_str(type, "MatchGapsType", gaps_map);
-        });
+        }, "Return a String based on GapsType value.");
     nb::implicitly_convertible<std::string, MatchParameters::GapsType>();
 }
