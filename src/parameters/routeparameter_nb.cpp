@@ -51,6 +51,7 @@ void init_RouteParameters(nb::module_& m) {
                 IsValid (bool): A bool value denoting validity of parameter values.\n\n"
             "Attributes:\n\
                 steps (bool): Return route steps for each route leg.\n\
+                alternatives (bool): Search for alternative routes.\n\
                 number_of_alternatives (int): Search for n alternative routes.\n\
                 annotations_type (string): Returns additional metadata for each coordinate along the route geometry.\n\
                 geometries (string): Returned route geometry format - influences overview and per step.\n\
@@ -113,6 +114,7 @@ void init_RouteParameters(nb::module_& m) {
                     "snapping"_a = std::string()
             )
         .def_rw("steps", &RouteParameters::steps)
+        .def_rw("alternatives", &RouteParameters::alternatives)
         .def_rw("number_of_alternatives", &RouteParameters::number_of_alternatives)
         .def_rw("annotations_type", &RouteParameters::annotations_type)
         .def_rw("geometries", &RouteParameters::geometries)

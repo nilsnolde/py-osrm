@@ -47,12 +47,12 @@ class TestRoute:
         route_params.alternatives = True
         res = self.osrm.Route(route_params)
         assert(res["routes"])
-        assert(len(res["routes"]) >= 1)
+        assert(len(res["routes"]) > 1)
 
         route_params.number_of_alternatives = 3
         res = self.osrm.Route(route_params)
         assert(res["routes"])
-        assert(len(res["routes"]) >= 1)
+        assert(len(res["routes"]) > 1)
 
     def test_route_badparams(self):
         route_params = py_osrm.RouteParameters(
@@ -252,14 +252,14 @@ class TestRoute:
         )
         route_params = py_osrm.RouteParameters(
             coordinates = two_test_coordinates,
-            alternatives = 10
+            number_of_alternatives = 10
         )
         res = osrm.Route(route_params)
         assert(isinstance(res["routes"], py_osrm.Array))
 
         route_params = py_osrm.RouteParameters(
             coordinates = two_test_coordinates,
-            alternatives = 11
+            number_of_alternatives = 11
         )
         with pytest.raises(RuntimeError) as ex:
             res = osrm.Route(route_params)
