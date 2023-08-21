@@ -49,12 +49,20 @@ jobs:
 
         CIBW_ENVIRONMENT_MACOS: MACOSX_DEPLOYMENT_TARGET="10.14"
         CIBW_BEFORE_ALL_MACOS: |
-          gh run download ${{ env.ARTIFACT_ID }} -n osrm-backend
-          tar -zxf osrm-backend.tgz
-          cd osrm-backend/build
+          gh run download ${{ env.ARTIFACT_ID }} -n osrm-backend_${{ matrix.platform }}
+          mkdir osrm-backend
+          tar -zxf osrm-backend.tgz -C osrm-backend
+          cd osrm-backend
+
+          cp -r include /usr/local
+          cp -r third_party/flatbuffers/include /usr/local
+          cp -r third_party/variant/include /usr/local
+          cp -r profiles /usr/local/share/osrm/
+          cd build
+          cp *.a /usr/local/lib
+          cp osrm-* /usr/local/bin
+          cp libosrm.pc /usr/local/lib/pkgconfig
 
           export HOMEBREW_NO_AUTO_UPDATE=1 HOMEBREW_NO_INSTALL_CLEANUP=1
           brew install lua tbb boost@1.76
           brew link boost@1.76
-          
-          make install

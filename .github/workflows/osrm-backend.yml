@@ -25,23 +25,24 @@ jobs:
         fetch-depth: 1
         path: osrm-backend
 
-    - name: Build osrm-backend
+    - name: Build osrm-backend (macos)
+      if: matrix.platform == 'macos'
+      working-directory: osrm-backend
       run: |
         export HOMEBREW_NO_AUTO_UPDATE=1 HOMEBREW_NO_INSTALL_CLEANUP=1
         brew install lua tbb boost@1.76
         brew link boost@1.76
         
-        cd osrm-backend
         mkdir build && cd build
         cmake ..
         make -j$((`sysctl -n hw.ncpu`+1))
-        cd ../../
-        tar -czf osrm-backend.tgz osrm-backend
+        cd ../
+        tar -czf osrm-backend.tgz build/libosrm* build/osrm-* include profiles third_party/flatbuffers third_party/variant
         du -h osrm-backend.tgz
 
     - name: Archive production artifacts
       uses: actions/upload-artifact@v3
       with:
-        name: osrm-backend
-        path: osrm-backend.tgz
+        name: osrm-backend_${{ matrix.platform }}
+        path: osrm-backend/osrm-backend.tgz
         if-no-files-found: error
