@@ -1,5 +1,5 @@
 # Trip
-::: py_osrm.OSRM.Tile
+::: py_osrm.OSRM.Trip
         
 ---
 ## Trip Parameters

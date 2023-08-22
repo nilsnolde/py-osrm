@@ -1,7 +1,7 @@
-# py_osrm
+# py-osrm
 ![PR_CI](https://github.com/gis-ops/py-osrm/actions/workflows/pull_request.yml/badge.svg)
 
-### py_osrm is a Python package that binds to [osrm-backend](https://github.com/Project-OSRM/osrm-backend) using [nanobind](https://github.com/wjakob/nanobind).
+### py-osrm is a Python package that binds to [osrm-backend](https://github.com/Project-OSRM/osrm-backend) using [nanobind](https://github.com/wjakob/nanobind).
 
 ---
 
@@ -14,7 +14,7 @@ MacOS | x86_64
 ---
 
 ## Installation
-py_osrm is supported on **Python 3.8+**, and can be installed from source via running the following command in the source folder:
+py-osrm is supported on **CPython 3.8+**, and can be installed from source via running the following command in the source folder:
 ```
 pip install .
 ```

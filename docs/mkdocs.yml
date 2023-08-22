@@ -17,7 +17,8 @@ plugins:
 
 nav:
   - Index: index.md
-  - Services:
+  - OSRM:
+    - pages/osrm.md
     - pages/match.md
     - pages/nearest.md
     - pages/route.md
