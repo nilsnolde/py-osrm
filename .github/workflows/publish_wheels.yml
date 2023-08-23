@@ -1,0 +1,100 @@
+name: Publish Wheels
+
+on:
+  workflow_dispatch:
+  push:
+    branches-ignore:
+      - '*'
+    tags:
+      - '*'
+
+jobs:
+  build_wheels:
+    name: Wheels - cp*, ${{ matrix.platform }}
+    runs-on: ${{ matrix.platform }}-${{ matrix.version }}
+    strategy:
+      fail-fast: true
+      matrix:
+        platform: [ubuntu, macos]
+        version: [latest]
+    env:
+      GITHUB_TOKEN: ${{ github.token }}
+      ARTIFACT_WORKFLOW: osrm-backend.yml
+
+    steps:
+    - name: Checkout Project
+      uses: actions/checkout@v3
+
+    - name: Get osrm-backend Artifact ID
+      if: matrix.platform == 'macos'
+      run: |
+        echo ARTIFACT_ID=$( \
+          gh api -X GET \
+          repos/${{ github.repository }}/actions/workflows/${{ env.ARTIFACT_WORKFLOW }}/runs \
+          --field status='success' \
+          --field per_page=1 \
+          | jq '.["workflow_runs"][0].id') \
+        >> $GITHUB_ENV
+
+    - name: Run CIBuildWheel
+      uses: pypa/cibuildwheel@v2.14.1
+      env:
+        CIBW_BUILD_VERBOSITY: 1
+
+        CIBW_TEST_REQUIRES: pytest
+        CIBW_TEST_COMMAND: "pytest {project}/tests"
+        CIBW_BEFORE_TEST: osrm-datastore {package}/tests/test_data/ch/monaco
+
+        CIBW_ARCHS: native
+        CIBW_BUILD: cp*
+        CIBW_SKIP: "*musllinux*"
+        
+        CIBW_MANYLINUX_X86_64_IMAGE: ghcr.io/gis-ops/manylinux:2_28_osrm_python
+        CIBW_REPAIR_WHEEL_COMMAND_LINUX: "LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib/intel64/gcc4.8/ auditwheel repair -w {dest_dir} {wheel}"
+
+        CIBW_ENVIRONMENT_MACOS: MACOSX_DEPLOYMENT_TARGET="10.14"
+        CIBW_BEFORE_ALL_MACOS: |
+          gh run download ${{ env.ARTIFACT_ID }} -n osrm-backend_${{ matrix.platform }}
+          mkdir osrm-backend
+          tar -zxf osrm-backend.tgz -C osrm-backend
+          cd osrm-backend
+
+          cp -r include /usr/local
+          cp -r third_party/flatbuffers/include /usr/local
+          cp -r third_party/variant/include /usr/local
+          cp -r profiles /usr/local/share/osrm/
+          cd build
+          cp *.a /usr/local/lib
+          cp osrm-* /usr/local/bin
+          cp libosrm.pc /usr/local/lib/pkgconfig
+
+          export HOMEBREW_NO_AUTO_UPDATE=1 HOMEBREW_NO_INSTALL_CLEANUP=1
+          brew install lua tbb boost@1.76
+          brew link boost@1.76
+
+    - name: Upload Wheels
+      uses: actions/upload-artifact@v3
+      with:
+        path: wheelhouse/*.whl
+
+  upload_all:
+    name: Upload if Release
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
+    needs: [build_wheels]
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+
+    - uses: actions/download-artifact@v3
+      with:
+        name: artifact
+        path: dist
+
+    - uses: pypa/gh-action-pypi-publish@release/v1
+      with:
+        user: whytro
+        password: ${{ secrets.PYPI_PASS }}
+        repository-url: https://test.pypi.org/legacy/
