@@ -23,3 +23,21 @@ minimum-version = "0.4"
 build-dir = "build/{wheel_tag}"
 # Build stable ABI wheels for CPython 3.12+
 wheel.py-api = "cp312"
+
+[tool.cibuildwheel]
+build-verbosity = 1
+test-requires = "pytest"
+test-command = "pytest {project}/tests"
+before-test = "osrm-datastore {package}/tests/test_data/ch/monaco"
+
+archs = ["native"]
+build = "cp*"
+skip = "*musllinux*"
+manylinux-x86_64-image = "ghcr.io/gis-ops/manylinux:2_28_osrm_python"
+
+[tool.cibuildwheel.linux]
+environment = "LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib/intel64/gcc4.8/"
+repair-wheel-command = "auditwheel repair -w {dest_dir} {wheel}"
+
+[tool.cibuildwheel.macos]
+environment = "MACOSX_DEPLOYMENT_TARGET=10.14"

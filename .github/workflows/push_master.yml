@@ -38,20 +38,6 @@ jobs:
     - name: Run CIBuildWheel
       uses: pypa/cibuildwheel@v2.14.1
       env:
-        CIBW_BUILD_VERBOSITY: 1
-
-        CIBW_TEST_REQUIRES: pytest
-        CIBW_TEST_COMMAND: "pytest {project}/tests"
-        CIBW_BEFORE_TEST: osrm-datastore {package}/tests/test_data/ch/monaco
-
-        CIBW_ARCHS: native
-        CIBW_BUILD: cp38* 
-        CIBW_SKIP: "*musllinux*"
-        
-        CIBW_MANYLINUX_X86_64_IMAGE: ghcr.io/gis-ops/manylinux:2_28_osrm_python
-        CIBW_REPAIR_WHEEL_COMMAND_LINUX: "LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib/intel64/gcc4.8/ auditwheel repair -w {dest_dir} {wheel}"
-
-        CIBW_ENVIRONMENT_MACOS: MACOSX_DEPLOYMENT_TARGET="10.14"
         CIBW_BEFORE_ALL_MACOS: |
           gh run download ${{ env.ARTIFACT_ID }} -n osrm-backend_${{ matrix.platform }}
           mkdir osrm-backend
