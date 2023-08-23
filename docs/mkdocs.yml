@@ -1,0 +1,29 @@
+site_name: py_osrm
+
+theme:
+  name: material
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          options: 
+            docstring_style: google
+            merge_init_into_class: true
+            show_root_full_path: false
+            docstring_options:
+              ignore_init_summary: true
+
+nav:
+  - Index: index.md
+  - OSRM:
+    - pages/osrm.md
+    - pages/match.md
+    - pages/nearest.md
+    - pages/route.md
+    - pages/table.md
+    - pages/tile.md
+    - pages/trip.md
+  - Other:
+    - pages/base.md
