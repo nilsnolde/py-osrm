@@ -1,10 +1,15 @@
 name: Pull Request
 
-on: [pull_request]
+on:
+  pull_request:
+    branches:
+      - main
+    paths-ignore:
+      - '*.md'
 
 jobs:
   build_wheels:
-    name: PR - cp*, ${{ matrix.platform }}
+    name: PR - cp38*, ${{ matrix.platform }}
     runs-on: ${{ matrix.platform }}-${{ matrix.version }}
     strategy:
       fail-fast: true
@@ -21,7 +26,6 @@ jobs:
 
     - name: Get osrm-backend Artifact ID
       if: matrix.platform == 'macos'
-      shell: bash
       run: |
         echo ARTIFACT_ID=$( \
           gh api -X GET \
