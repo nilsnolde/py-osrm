@@ -82,5 +82,5 @@ jobs:
     - uses: pypa/gh-action-pypi-publish@release/v1
       with:
         user: whytro
-        password: ${{ secrets.PYPI_PASS }}
+        password: ${{ secrets.PYPI_SECRET }}
         repository-url: https://test.pypi.org/legacy/
