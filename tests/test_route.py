@@ -1,5 +1,5 @@
 import pytest
-import py_osrm
+import osrm
 import constants
 
 data_path = constants.data_path
@@ -8,97 +8,97 @@ three_test_coordinates = constants.three_test_coordinates
 two_test_coordinates = constants.two_test_coordinates
 
 class TestRoute:
-    osrm = py_osrm.OSRM(
+    py_osrm = osrm.OSRM(
         storage_config = data_path, 
         use_shared_memory = False
     )
 
     def test_route(self):
-        route_params = py_osrm.RouteParameters(
+        route_params = osrm.RouteParameters(
             coordinates = two_test_coordinates
         )
-        res = self.osrm.Route(route_params)
+        res = self.py_osrm.Route(route_params)
         assert(res["waypoints"])
         assert(res["routes"])
         assert(res["routes"][0]["geometry"])
 
     def test_route_mld(self):
-        osrm = py_osrm.OSRM(
+        py_osrm = osrm.OSRM(
             algorithm = "MLD",
             storage_config = mld_data_path,
             use_shared_memory = False
         )
-        route_params = py_osrm.RouteParameters(
+        route_params = osrm.RouteParameters(
             coordinates = [(13.43864,52.51993),(13.415852,52.513191)]
         )
-        res = osrm.Route(route_params)
+        res = py_osrm.Route(route_params)
         assert(res["waypoints"])
         assert(res["routes"])
         assert(res["routes"][0]["geometry"])
 
     def test_route_alternatives(self):
-        route_params = py_osrm.RouteParameters(
+        route_params = osrm.RouteParameters(
             coordinates = two_test_coordinates
         )
-        res = self.osrm.Route(route_params)
+        res = self.py_osrm.Route(route_params)
         assert(res["routes"])
         assert(len(res["routes"]) == 1)
         
         route_params.alternatives = True
-        res = self.osrm.Route(route_params)
+        res = self.py_osrm.Route(route_params)
         assert(res["routes"])
         assert(len(res["routes"]) > 1)
 
         route_params.number_of_alternatives = 3
-        res = self.osrm.Route(route_params)
+        res = self.py_osrm.Route(route_params)
         assert(res["routes"])
         assert(len(res["routes"]) > 1)
 
     def test_route_badparams(self):
-        route_params = py_osrm.RouteParameters(
+        route_params = osrm.RouteParameters(
             coordinates = []
         )
         with pytest.raises(Exception):
-            self.osrm.Route(route_params)
+            self.py_osrm.Route(route_params)
         with pytest.raises(Exception):
             route_params.coordinates = None
-            self.osrm.Route(route_params)
+            self.py_osrm.Route(route_params)
         with pytest.raises(Exception):
             route_params.coordinates = [[three_test_coordinates[0], three_test_coordinates[1]]]
-            self.osrm.Route(route_params)
+            self.py_osrm.Route(route_params)
         with pytest.raises(Exception):
             route_params.coordinates = [(213.43864,252.51993),(413.415852,552.513191)]
-            res = self.osrm.Route(route_params)
+            res = self.py_osrm.Route(route_params)
 
 
     def test_route_shmem(self):
-        osrm = py_osrm.OSRM()
-        route_params = py_osrm.RouteParameters(
+        py_osrm = osrm.OSRM()
+        route_params = osrm.RouteParameters(
             coordinates = two_test_coordinates
         )
-        res = osrm.Route(route_params)
+        res = py_osrm.Route(route_params)
         assert(isinstance(res["routes"][0]["geometry"], str))
 
     def test_route_geometrycompression(self):
-        osrm = py_osrm.OSRM()
-        route_params = py_osrm.RouteParameters(
+        py_osrm = osrm.OSRM()
+        route_params = osrm.RouteParameters(
             coordinates = two_test_coordinates,
             geometries = "geojson"
         )
-        res = osrm.Route(route_params)
-        assert(isinstance(res["routes"][0]["geometry"]["coordinates"], py_osrm.Array))
+        res = py_osrm.Route(route_params)
+        assert(isinstance(res["routes"][0]["geometry"]["coordinates"], osrm.Array))
         assert(res["routes"][0]["geometry"]["type"] == "LineString")
 
     def test_route_polyline6(self):
-        osrm = py_osrm.OSRM()
-        route_params = py_osrm.RouteParameters(
+        py_osrm = osrm.OSRM()
+        route_params = osrm.RouteParameters(
             coordinates = two_test_coordinates,
             continue_straight = False,
             overview = "false",
             geometries = "polyline6",
             steps = True
         )
-        res = osrm.Route(route_params)
+        res = py_osrm.Route(route_params)
         assert(res["routes"])
         assert(len(res["routes"]) == 1)
         assert(not res["routes"][0]["geometry"])
@@ -106,7 +106,7 @@ class TestRoute:
         assert(isinstance(res["routes"][0]["legs"][0]["geometry"], str))
 
     def test_route_speedannotations(self):
-        route_params = py_osrm.RouteParameters(
+        route_params = osrm.RouteParameters(
             coordinates = two_test_coordinates,
             continue_straight = False,
             overview = "false",
@@ -114,7 +114,7 @@ class TestRoute:
             steps = True,
             annotations = ["speed"],            
         )
-        res = self.osrm.Route(route_params)
+        res = self.py_osrm.Route(route_params)
         assert(res["routes"])
         assert(len(res["routes"]) == 1)
         assert(not res["routes"][0]["geometry"])
@@ -130,15 +130,15 @@ class TestRoute:
                    and not l["annotation"]["nodes"])
             
         route_params.overview = "full"
-        full_res = self.osrm.Route(route_params)
+        full_res = self.py_osrm.Route(route_params)
 
         route_params.overview = "simplified"
-        simplified_res = self.osrm.Route(route_params)
+        simplified_res = self.py_osrm.Route(route_params)
         
         assert(full_res["routes"][0]["geometry"] != simplified_res["routes"][0]["geometry"])
 
     def test_route_severalannotations(self):
-        route_params = py_osrm.RouteParameters(
+        route_params = osrm.RouteParameters(
             coordinates = two_test_coordinates,
             continue_straight = False,
             overview = "false",
@@ -146,7 +146,7 @@ class TestRoute:
             steps = True,
             annotations = ["duration", "distance", "nodes"],            
         )
-        res = self.osrm.Route(route_params)
+        res = self.py_osrm.Route(route_params)
         assert(res["routes"])
         assert(len(res["routes"]) == 1)
         assert(not res["routes"][0]["geometry"])
@@ -162,15 +162,15 @@ class TestRoute:
                    and not l["annotation"]["speed"])
             
         route_params.overview = "full"
-        full_res = self.osrm.Route(route_params)
+        full_res = self.py_osrm.Route(route_params)
 
         route_params.overview = "simplified"
-        simplified_res = self.osrm.Route(route_params)
+        simplified_res = self.py_osrm.Route(route_params)
         
         assert(full_res["routes"][0]["geometry"] != simplified_res["routes"][0]["geometry"])
 
     def test_route_options(self):
-        route_params = py_osrm.RouteParameters(
+        route_params = osrm.RouteParameters(
             coordinates = two_test_coordinates,
             continue_straight = False,
             overview = "false",
@@ -178,7 +178,7 @@ class TestRoute:
             steps = True,
             annotations = ["all"],            
         )
-        res = self.osrm.Route(route_params)
+        res = self.py_osrm.Route(route_params)
         assert(res["routes"])
         assert(len(res["routes"]) == 1)
         assert(not res["routes"][0]["geometry"])
@@ -194,124 +194,124 @@ class TestRoute:
                    and l["annotation"]["speed"])
             
         route_params.overview = "full"
-        full_res = self.osrm.Route(route_params)
+        full_res = self.py_osrm.Route(route_params)
 
         route_params.overview = "simplified"
-        simplified_res = self.osrm.Route(route_params)
+        simplified_res = self.py_osrm.Route(route_params)
         
         assert(full_res["routes"][0]["geometry"] != simplified_res["routes"][0]["geometry"])
 
     # def test_route_validbearings(self):
-    #     route_params = py_osrm.RouteParameters(
+    #     route_params = osrm.RouteParameters(
     #         coordinates = two_test_coordinates,
     #         bearings = [(200, 180), (250, 180)]       
     #     )
-    #     res = self.osrm.Route(route_params)
+    #     res = self.py_osrm.Route(route_params)
     #  
     #     assert(res["routes"][0])
 
     #     route_params.bearings = [None, (200, 180)]
-    #     res = self.osrm.Route(route_params)
+    #     res = self.py_osrm.Route(route_params)
     #  
     #     assert(res["routes"][0])
 
     # def test_route_validradius(self):
-    #     route_params = py_osrm.RouteParameters(
+    #     route_params = osrm.RouteParameters(
     #         coordinates = two_test_coordinates,
     #         radiuses = [100, 100]       
     #     )
-    #     res = self.osrm.Route(route_params)
+    #     res = self.py_osrm.Route(route_params)
     #  
 
     #     route_params.radiuses = [None, None]
-    #     res = self.osrm.Route(route_params)
+    #     res = self.py_osrm.Route(route_params)
     #  
 
     #     route_params.radiuses = [100, None]
-    #     res = self.osrm.Route(route_params)
+    #     res = self.py_osrm.Route(route_params)
     #  
 
     # def test_route_validapproaches(self):
-    #     route_params = py_osrm.RouteParameters(
+    #     route_params = osrm.RouteParameters(
     #         coordinates = two_test_coordinates,
-    #         approaches = [None, py_osrm.Approach.CURB]
+    #         approaches = [None, osrm.Approach.CURB]
     #     )
-    #     res = self.osrm.Route(route_params)
+    #     res = self.py_osrm.Route(route_params)
     #  
 
-    #     route_params.approaches = [py_osrm.Approach.UNRESTRICTED, None]
-    #     res = self.osrm.Route(route_params)
+    #     route_params.approaches = [osrm.Approach.UNRESTRICTED, None]
+    #     res = self.py_osrm.Route(route_params)
     #  
 
     def test_route_customlimitsmld(self):
-        osrm = py_osrm.OSRM(
+        py_osrm = osrm.OSRM(
             algorithm = "MLD",
             storage_config = mld_data_path,
             max_alternatives = 10,
             use_shared_memory = False
         )
-        route_params = py_osrm.RouteParameters(
+        route_params = osrm.RouteParameters(
             coordinates = two_test_coordinates,
             number_of_alternatives = 10
         )
-        res = osrm.Route(route_params)
-        assert(isinstance(res["routes"], py_osrm.Array))
+        res = py_osrm.Route(route_params)
+        assert(isinstance(res["routes"], osrm.Array))
 
-        route_params = py_osrm.RouteParameters(
+        route_params = osrm.RouteParameters(
             coordinates = two_test_coordinates,
             number_of_alternatives = 11
         )
         with pytest.raises(RuntimeError) as ex:
-            res = osrm.Route(route_params)
+            res = py_osrm.Route(route_params)
         assert("TooBig" in str(ex.value))
 
     def test_route_nomotorways(self):
-        osrm = py_osrm.OSRM(
+        py_osrm = osrm.OSRM(
             algorithm = "MLD",
             storage_config = mld_data_path,
             use_shared_memory = False
         )
-        route_params = py_osrm.RouteParameters(
+        route_params = osrm.RouteParameters(
             coordinates = two_test_coordinates,
             exclude = ["motorway"]
         )
-        res = osrm.Route(route_params)
+        res = py_osrm.Route(route_params)
         assert(len(res["waypoints"]) == 2)
         assert(len(res["routes"]) == 1)
 
     def test_route_invalidwaypoints(self):
-        route_params = py_osrm.RouteParameters(
+        route_params = osrm.RouteParameters(
             steps = True,
             coordinates = three_test_coordinates,
             waypoints = [0]
         )
         with pytest.raises(RuntimeError) as ex:
-            res = self.osrm.Route(route_params)
+            res = self.py_osrm.Route(route_params)
         assert("InvalidValue" in str(ex.value))
 
-        route_params = py_osrm.RouteParameters(
+        route_params = osrm.RouteParameters(
             steps = True,
             coordinates = three_test_coordinates,
             waypoints = [1,2]
         )
         with pytest.raises(RuntimeError) as ex:
-            res = self.osrm.Route(route_params)
+            res = self.py_osrm.Route(route_params)
         assert("InvalidValue" in str(ex.value))
 
-        route_params = py_osrm.RouteParameters(
+        route_params = osrm.RouteParameters(
             steps = True,
             coordinates = three_test_coordinates,
             waypoints = [2, 0]
         )
         with pytest.raises(RuntimeError) as ex:
-            res = self.osrm.Route(route_params)
+            res = self.py_osrm.Route(route_params)
         assert("InvalidValue" in str(ex.value))
 
     def test_route_snapping(self):
-        route_params = py_osrm.RouteParameters(
+        route_params = osrm.RouteParameters(
             coordinates = [(7.448205209414596,43.754001097311544),
                            (7.447122039202185,43.75306156811368)],
             snapping = "any"
         )
-        res = self.osrm.Route(route_params)
+        res = self.py_osrm.Route(route_params)
         assert(round(res["routes"][0]["distance"] * 10) == 1315)

@@ -17,7 +17,7 @@ void init_TripParameters(nb::module_& m) {
     nb::class_<TripParameters, RouteParameters>(m, "TripParameters")
         .def(nb::init<>(), nb::raw_doc("Instantiates an instance of TripParameters.\n\n"
             "Examples:\n\
-                >>> trip_params = py_osrm.TripParameters(\n\
+                >>> trip_params = osrm.TripParameters(\n\
                         coordinates = [(7.41337, 43.72956), (7.41546, 43.73077)],\n\
                         source = 'any',\n\
                         destination = 'last',\n\
@@ -29,15 +29,15 @@ void init_TripParameters(nb::module_& m) {
                 source (string 'any' | 'first'): Returned route starts at 'any' or 'first' coordinate. (default '')\n\
                 destination (string 'any' | 'last'): Returned route ends at 'any' or 'last' coordinate. (default '')\n\
                 roundtrip (bool): Returned route is a roundtrip (route returns to first location). (default True)\n\
-                RouteParameters (py_osrm.RouteParameters): Keyword arguments from parent class.\n\n"
+                RouteParameters (osrm.RouteParameters): Keyword arguments from parent class.\n\n"
             "Returns:\n\
-                __init__ (py_osrm.TripParameters): A TripParameters object, for usage in Trip.\n\
+                __init__ (osrm.TripParameters): A TripParameters object, for usage in Trip.\n\
                 IsValid (bool): A bool value denoting validity of parameter values.\n\n"
             "Attributes:\n\
                 source (string): Returned route starts at 'any' or 'first' coordinate.\n\
                 destination (string): Returned route ends at 'any' or 'last' coordinate.\n\
                 roundtrip (bool): Returned route is a roundtrip (route returns to first location).\n\
-                RouteParameters (py_osrm.RouteParameters): Attributes from parent class."
+                RouteParameters (osrm.RouteParameters): Attributes from parent class."
             ))
         .def("__init__", [](TripParameters* t,
                 TripParameters::SourceType source,

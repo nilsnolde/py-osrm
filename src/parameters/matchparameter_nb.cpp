@@ -17,7 +17,7 @@ void init_MatchParameters(nb::module_& m) {
     nb::class_<MatchParameters, RouteParameters>(m, "MatchParameters")
         .def(nb::init<>(), nb::raw_doc("Instantiates an instance of MatchParameters.\n\n"
             "Examples:\n\
-                >>> match_params = py_osrm.MatchParameters(\n\
+                >>> match_params = osrm.MatchParameters(\n\
                         coordinates = [(7.41337, 43.72956), (7.41546, 43.73077), (7.41862, 43.73216)],\n\
                         timestamps = [1424684612, 1424684616, 1424684620],\n\
                         gaps = 'split',\n\
@@ -29,15 +29,15 @@ void init_MatchParameters(nb::module_& m) {
                 timestamps (list of unsigned int): Timestamps for the input locations in seconds since UNIX epoch. (default [])\n\
                 gaps (list of 'split' | 'ignore'): Allows the input track splitting based on huge timestamp gaps between points. (default [])\n\
                 tidy (bool): Allows the input track modification to obtain better matching quality for noisy tracks. (default False)\n\
-                RouteParameters (py_osrm.RouteParameters): Keyword arguments from parent class.\n\n"
+                RouteParameters (osrm.RouteParameters): Keyword arguments from parent class.\n\n"
             "Returns:\n\
-                __init__ (py_osrm.MatchParameters): A MatchParameters object, for usage in Match.\n\
+                __init__ (osrm.MatchParameters): A MatchParameters object, for usage in Match.\n\
                 IsValid (bool): A bool value denoting validity of parameter values.\n\n"
             "Attributes:\n\
                 timestamps (list of unsigned int): Timestamps for the input locations in seconds since UNIX epoch.\n\
                 gaps (string): Allows the input track splitting based on huge timestamp gaps between points.\n\
                 tidy (bool): Allows the input track modification to obtain better matching quality for noisy tracks.\n\
-                RouteParameters (py_osrm.RouteParameters): Attributes from parent class."
+                RouteParameters (osrm.RouteParameters): Attributes from parent class."
             ))
         .def("__init__", [](MatchParameters* t,
                 std::vector<unsigned> timestamps,

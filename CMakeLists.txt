@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.18)
 
-set(PROJECT_NAME "py_osrm")
+set(PROJECT_NAME "osrm")
 set(EXT_NAME "osrm_ext")
 project(${PROJECT_NAME} LANGUAGES CXX)
 

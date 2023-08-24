@@ -25,7 +25,7 @@ static const std::unordered_map<std::string, TableParameters::AnnotationsType> t
     nb::class_<TableParameters, BaseParameters>(m, "TableParameters")
         .def(nb::init<>(), nb::raw_doc("Instantiates an instance of TableParameters.\n\n"
             "Examples:\n\
-                >>> table_params = py_osrm.TableParameters(\n\
+                >>> table_params = osrm.TableParameters(\n\
                         coordinates = [(7.41337, 43.72956), (7.41546, 43.73077)],\n\
                         sources = [0],\n\
                         destinations = [1],\n\
@@ -46,9 +46,9 @@ static const std::unordered_map<std::string, TableParameters::AnnotationsType> t
                 fallback_coordinate_type (string 'input' | 'snapped'): When using a fallback_speed, use the user-supplied coordinate (input), \
                     or the snapped location (snapped) for calculating distances. (default '')\n\
                 scale_factor: Scales the table duration values by this number (use in conjunction with annotations=durations). (default 1.0)\n\
-                BaseParameters (py_osrm.osrm_ext.BaseParameters): Keyword arguments from parent class.\n\n"
+                BaseParameters (osrm.osrm_ext.BaseParameters): Keyword arguments from parent class.\n\n"
             "Returns:\n\
-                __init__ (py_osrm.TableParameters): A TableParameters object, for usage in Table.\n\
+                __init__ (osrm.TableParameters): A TableParameters object, for usage in Table.\n\
                 IsValid (bool): A bool value denoting validity of parameter values.\n\n"
             "Attributes:\n\
                 sources (list of int): Use location with given index as source.\n\
@@ -59,7 +59,7 @@ static const std::unordered_map<std::string, TableParameters::AnnotationsType> t
                 fallback_coordinate_type (string): When using a fallback_speed, use the user-supplied coordinate (input), \
                     or the snapped location (snapped) for calculating distances.\n\
                 scale_factor: Scales the table duration values by this number (use in conjunction with annotations=durations).\n\
-                BaseParameters (py_osrm.osrm_ext.BaseParameters): Attributes from parent class."
+                BaseParameters (osrm.osrm_ext.BaseParameters): Attributes from parent class."
             ))
         .def("__init__", [](TableParameters* t,
                 std::vector<std::size_t> sources,
