@@ -1,5 +1,5 @@
 # py-osrm
-![PR_CI](https://github.com/gis-ops/py-osrm/actions/workflows/pull_request.yml/badge.svg)
+![PUSH_CI](https://github.com/gis-ops/py-osrm/actions/workflows/push_master.yml/badge.svg)
 
 ### py-osrm is a Python package that binds to [osrm-backend](https://github.com/Project-OSRM/osrm-backend) using [nanobind](https://github.com/wjakob/nanobind).
 
