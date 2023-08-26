@@ -73,33 +73,48 @@ target_include_directories(${EXT_NAME}
     ${CMAKE_CURRENT_SOURCE_DIR}/include/parameters
 )
 
-include(FetchContent)
-FetchContent_Declare(
-  libosrm
-  GIT_REPOSITORY https://github.com/Project-OSRM/osrm-backend
-  GIT_TAG master
-)
-SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-array-bounds -Wno-uninitialized -Wno-free-nonheap-object")
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
+find_package(LibOSRM)
 
-FetchContent_GetProperties(libosrm)
-if(NOT libosrm_POPULATED)
-  FetchContent_Populate(libosrm)
-  set(CMAKE_INSTALL_PREFIX ${CMAKE_CURRENT_BINARY_DIR})
-  add_subdirectory(
-    ${libosrm_SOURCE_DIR}
-    ${libosrm_BINARY_DIR}
+if(LibOSRM_FOUND)
+  target_link_libraries(${EXT_NAME}
+    PRIVATE
+      ${LibOSRM_LIBRARIES}
+      ${LibOSRM_DEPENDENT_LIBRARIES}
+  )
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${LibOSRM_CXXFLAGS}")
+
+  file(GLOB OSRM_EXECS ${LibOSRM_EXEC_DIR}/osrm-*)
+  file(COPY ${OSRM_EXECS} DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/src/bin)
+else()
+  include(FetchContent)
+  FetchContent_Declare(
+    libosrm
+    GIT_REPOSITORY https://github.com/Project-OSRM/osrm-backend
+    GIT_TAG master
+  )
+  SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-array-bounds -Wno-uninitialized -Wno-free-nonheap-object")
+
+  FetchContent_GetProperties(libosrm)
+  if(NOT libosrm_POPULATED)
+    FetchContent_Populate(libosrm)
+    set(CMAKE_INSTALL_PREFIX ${CMAKE_CURRENT_BINARY_DIR})
+    add_subdirectory(
+      ${libosrm_SOURCE_DIR}
+      ${libosrm_BINARY_DIR}
+    )
+  endif()
+
+  target_include_directories(${EXT_NAME} 
+    PUBLIC
+      ${libosrm_SOURCE_DIR}/include
+      ${libosrm_SOURCE_DIR}/third_party/variant/include
+      ${libosrm_SOURCE_DIR}/third_party/flatbuffers/include
+  )
+  target_link_libraries(${EXT_NAME}
+    PRIVATE
+      osrm
   )
 endif()
-
-target_include_directories(${EXT_NAME} 
-  PUBLIC
-    ${libosrm_SOURCE_DIR}/include
-    ${libosrm_SOURCE_DIR}/third_party/variant/include
-    ${libosrm_SOURCE_DIR}/third_party/flatbuffers/include
-)
-target_link_libraries(${EXT_NAME}
-  PRIVATE
-    osrm
-)
 
 install(TARGETS ${EXT_NAME} LIBRARY DESTINATION ${PROJECT_NAME})
