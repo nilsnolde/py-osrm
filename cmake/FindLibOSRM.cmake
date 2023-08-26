@@ -43,23 +43,6 @@ find_path(LibOSRM_EXEC_DIR
   /opt/local
   /opt)
 
-message(STATUS "The path to /usr/local/bin is: ${LibOSRM_EXEC_DIR}")
-# find_program(LibOSRM_EXEC_DIR
-#     NAME osrm-*
-#     HINTS /usr/local/bin/osrm-*
-# )
-
-
-# find_program(LibOSRM_EXEC_DIR osrm-*
-#   PATH_SUFFIXES osrm bin/osrm bin
-#   HINTS ${PC_LibOSRM_PREFIX}
-#   ~/Library/Frameworks
-#   /Library/Frameworks
-#   /usr/local
-#   /usr
-#   /opt/local
-#   /opt)
-
 find_library(TEST_LibOSRM_STATIC_LIBRARY Names osrm.lib libosrm.a
   PATH_SUFFIXES osrm lib/osrm lib
   HINTS ${PC_LibOSRM_LIBDIR} ${PC_LibOSRM_LIBRARY_DIRS}

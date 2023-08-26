@@ -102,8 +102,24 @@ else()
     add_subdirectory(
       ${libosrm_SOURCE_DIR}
       ${libosrm_BINARY_DIR}
+      EXCLUDE_FROM_ALL
     )
   endif()
+
+  install(TARGETS osrm-components
+          RUNTIME DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/src/bin)
+  install(TARGETS osrm-contract
+          RUNTIME DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/src/bin)
+  install(TARGETS osrm-customize
+          RUNTIME DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/src/bin)
+  install(TARGETS osrm-datastore
+          RUNTIME DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/src/bin)
+  install(TARGETS osrm-extract
+          RUNTIME DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/src/bin)
+  install(TARGETS osrm-partition
+          RUNTIME DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/src/bin)
+  install(TARGETS osrm-routed
+          RUNTIME DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/src/bin)
 
   target_include_directories(${EXT_NAME} 
     PUBLIC
