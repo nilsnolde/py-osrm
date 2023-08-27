@@ -75,3 +75,4 @@ find_package_handle_standard_args(LibOSRM DEFAULT_MSG
                                 LibOSRM_DEPENDENT_LIBRARIES
                                 LibOSRM_INCLUDE_DIR
                                 LibOSRM_EXEC_DIR)
+                                
