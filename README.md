@@ -1,7 +1,7 @@
 # py-osrm
 ![PUSH_CI](https://github.com/gis-ops/py-osrm/actions/workflows/push_master.yml/badge.svg)
 
-### py-osrm is a Python package that binds to [osrm-backend](https://github.com/Project-OSRM/osrm-backend) using [nanobind](https://github.com/wjakob/nanobind).
+**py-osrm is a Python package that binds to [osrm-backend](https://github.com/Project-OSRM/osrm-backend) using [nanobind](https://github.com/wjakob/nanobind).**
 
 ---
 
@@ -48,4 +48,4 @@ print(res["routes"])
 ---
 
 ## Documentation
-
+[Documentation Page](https://gis-ops.github.io/py-osrm/)

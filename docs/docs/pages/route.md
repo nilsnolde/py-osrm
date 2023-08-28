@@ -1,9 +1,9 @@
 # Route
-::: py_osrm.OSRM.Route
+::: osrm.OSRM.Route
         
 ---
 ## Route Parameters
-::: py_osrm.RouteParameters
+::: osrm.RouteParameters
     options:
       show_root_toc_entry: false
       members:

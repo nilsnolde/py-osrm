@@ -1,9 +1,9 @@
 # Match
-::: py_osrm.OSRM.Match
+::: osrm.OSRM.Match
         
 ---
 ## Match Parameters
-::: py_osrm.MatchParameters
+::: osrm.MatchParameters
     options:
       show_root_toc_entry: false
       members:

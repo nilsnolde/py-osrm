@@ -1,9 +1,9 @@
 # Tile
-::: py_osrm.OSRM.Tile
+::: osrm.OSRM.Tile
         
 ---
 ## Tile Parameters
-::: py_osrm.TileParameters
+::: osrm.TileParameters
     options:
       show_root_toc_entry: false
       members:
