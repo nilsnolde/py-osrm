@@ -18,7 +18,7 @@ void init_RouteParameters(nb::module_& m) {
     nb::class_<RouteParameters, BaseParameters>(m, "RouteParameters")
         .def(nb::init<>(), nb::raw_doc("Instantiates an instance of RouteParameters.\n\n"
             "Examples:\n\
-                >>> route_params = py_osrm.RouteParameters(\n\
+                >>> route_params = osrm.RouteParameters(\n\
                         coordinates = [(7.41337, 43.72956), (7.41546, 43.73077)],\n\
                         steps = True,\n\
                         number_of_alternatives = 3,\n\
@@ -45,9 +45,9 @@ void init_RouteParameters(nb::module_& m) {
                 overview (string 'simplified' | 'full' | 'false'): Add overview geometry either full, simplified. (default '')\n\
                 continue_straight (bool): Forces the route to keep going straight at waypoints, constraining u-turns. (default {})\n\
                 waypoints (list of int): Treats input coordinates indicated by given indices as waypoints in returned Match object. (default [])\n\
-                BaseParameters (py_osrm.osrm_ext.BaseParameters): Keyword arguments from parent class.\n\n"
+                BaseParameters (osrm.osrm_ext.BaseParameters): Keyword arguments from parent class.\n\n"
             "Returns:\n\
-                __init__ (py_osrm.RouteParameters): A RouteParameters object, for usage in Route.\n\
+                __init__ (osrm.RouteParameters): A RouteParameters object, for usage in Route.\n\
                 IsValid (bool): A bool value denoting validity of parameter values.\n\n"
             "Attributes:\n\
                 steps (bool): Return route steps for each route leg.\n\
@@ -57,7 +57,7 @@ void init_RouteParameters(nb::module_& m) {
                 geometries (string): Returned route geometry format - influences overview and per step.\n\
                 overview (string): Add overview geometry either full, simplified.\n\
                 continue_straight (bool): Forces the route to keep going straight at waypoints, constraining u-turns.\n\
-                BaseParameters (py_osrm.osrm_ext.BaseParameters): Attributes from parent class."
+                BaseParameters (osrm.osrm_ext.BaseParameters): Attributes from parent class."
             ))
         .def("__init__", [](RouteParameters* t,
                 const bool steps,

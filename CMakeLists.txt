@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.18)
 
-set(PROJECT_NAME "py_osrm")
+set(PROJECT_NAME "osrm")
 set(EXT_NAME "osrm_ext")
 project(${PROJECT_NAME} LANGUAGES CXX)
 
@@ -83,6 +83,9 @@ if(LibOSRM_FOUND)
       ${LibOSRM_DEPENDENT_LIBRARIES}
   )
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${LibOSRM_CXXFLAGS}")
+
+  file(GLOB OSRM_EXECS ${LibOSRM_EXEC_DIR}/osrm-*)
+  file(COPY ${OSRM_EXECS} DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/src/bin)
 else()
   include(FetchContent)
   FetchContent_Declare(
@@ -95,12 +98,28 @@ else()
   FetchContent_GetProperties(libosrm)
   if(NOT libosrm_POPULATED)
     FetchContent_Populate(libosrm)
+    set(CMAKE_INSTALL_PREFIX ${CMAKE_CURRENT_BINARY_DIR})
     add_subdirectory(
       ${libosrm_SOURCE_DIR}
       ${libosrm_BINARY_DIR}
       EXCLUDE_FROM_ALL
     )
   endif()
+
+  install(TARGETS osrm-components
+          RUNTIME DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/src/bin)
+  install(TARGETS osrm-contract
+          RUNTIME DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/src/bin)
+  install(TARGETS osrm-customize
+          RUNTIME DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/src/bin)
+  install(TARGETS osrm-datastore
+          RUNTIME DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/src/bin)
+  install(TARGETS osrm-extract
+          RUNTIME DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/src/bin)
+  install(TARGETS osrm-partition
+          RUNTIME DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/src/bin)
+  install(TARGETS osrm-routed
+          RUNTIME DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/src/bin)
 
   target_include_directories(${EXT_NAME} 
     PUBLIC

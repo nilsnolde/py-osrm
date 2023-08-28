@@ -17,8 +17,8 @@ void init_TileParameters(nb::module_& m) {
     nb::class_<TileParameters>(m, "TileParameters", nb::is_final())
         .def(nb::init<>(), nb::raw_doc("Instantiates an instance of TileParameters.\n\n"
             "Examples:\n\
-                >>> tile_params = py_osrm.TileParameters([17059, 11948, 15])\n\
-                >>> tile_params = py_osrm.TileParameters(\n\
+                >>> tile_params = osrm.TileParameters([17059, 11948, 15])\n\
+                >>> tile_params = osrm.TileParameters(\n\
                         x = 17059,\n\
                         y = 11948,\n\
                         z = 15\n\
@@ -31,7 +31,7 @@ void init_TileParameters(nb::module_& m) {
                 y (int): y value.\n\
                 z (int): z value.\n\n"
             "Returns:\n\
-                __init__ (py_osrm.TileParameters): A TileParameters object, for usage in Tile.\n\
+                __init__ (osrm.TileParameters): A TileParameters object, for usage in Tile.\n\
                 IsValid (bool): A bool value denoting validity of parameter values.\n\n"
             "Attributes:\n\
                 x (int): x value.\n\

@@ -1,3 +1,4 @@
+
 # https://github.com/Project-OSRM/osrm-backend/blob/master/example/cmake/FindLibOSRM.cmake
 
 # - Try to find LibOSRM
@@ -25,6 +26,16 @@ set(LibOSRM_LIBRARY_DIRS ${PC_LibOSRM_LIBRARY_DIRS})
 find_path(LibOSRM_INCLUDE_DIR osrm/osrm.hpp
   PATH_SUFFIXES osrm include/osrm include
   HINTS ${PC_LibOSRM_INCLUDEDIR} ${PC_LibOSRM_INCLUDE_DIRS}
+  ~/Library/Frameworks
+  /Library/Frameworks
+  /usr/local
+  /usr
+  /opt/local
+  /opt)
+find_path(LibOSRM_EXEC_DIR 
+  NAMES osrm-components osrm-contract osrm-customize osrm-datastore osrm-extract osrm-partition osrm-routed
+  PATH_SUFFIXES osrm bin/osrm bin
+  HINTS ${PC_LibOSRM_PREFIX}
   ~/Library/Frameworks
   /Library/Frameworks
   /usr/local
@@ -62,4 +73,6 @@ find_package_handle_standard_args(LibOSRM DEFAULT_MSG
                                 LibOSRM_CXXFLAGS
                                 LibOSRM_LIBRARIES
                                 LibOSRM_DEPENDENT_LIBRARIES
-                                LibOSRM_INCLUDE_DIR)
+                                LibOSRM_INCLUDE_DIR
+                                LibOSRM_EXEC_DIR)
+                                

@@ -1,5 +1,5 @@
 # py-osrm
-![PR_CI](https://github.com/gis-ops/py-osrm/actions/workflows/pull_request.yml/badge.svg)
+![PUSH_CI](https://github.com/gis-ops/py-osrm/actions/workflows/push_master.yml/badge.svg)
 
 ### py-osrm is a Python package that binds to [osrm-backend](https://github.com/Project-OSRM/osrm-backend) using [nanobind](https://github.com/wjakob/nanobind).
 
@@ -22,23 +22,23 @@ pip install .
 ## Example
 The following example will showcase the process of calculating routes between two coordinates.
 
-First, import the `py_osrm` library, and instantiate an instance of OSRM:
+First, import the `osrm` library, and instantiate an instance of OSRM:
 ```python
-import py_osrm
+import osrm
 
 # Instantiate py_osrm instance
-osrm = py_osrm.OSRM("./tests/test_data/ch/monaco.osrm")
+py_osrm = osrm.OSRM("./tests/test_data/ch/monaco.osrm")
 ```
 
 Then, declare `RouteParameters`, and then pass it into the `py_osrm` instance:
 ```python
 # Declare Route Parameters
-route_params = py_osrm.RouteParameters(
+route_params = osrm.RouteParameters(
     coordinates = [(7.41337, 43.72956), (7.41546, 43.73077)]
 )
 
 # Pass it into the py_osrm instance
-res = osrm.Route(route_params)
+res = py_osrm.Route(route_params)
 
 # Print out result output
 print(res["waypoints"])

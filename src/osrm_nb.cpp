@@ -62,9 +62,9 @@ NB_MODULE(osrm_ext, m) {
     nb::class_<OSRM>(m, "OSRM", nb::is_final())
         .def(nb::init<EngineConfig&>(), nb::raw_doc("Instantiates an instance of OSRM.\n\n"
             "Examples:\n\
-                >>> import py_osrm\n\
-                >>> osrm = py_osrm.OSRM('.tests/test_data/ch/monaco.osrm')\n\
-                >>> osrm = py_osrm.OSRM(\n\
+                >>> import osrm\n\
+                >>> py_osrm = osrm.OSRM('.tests/test_data/ch/monaco.osrm')\n\
+                >>> py_osrm = osrm.OSRM(\n\
                         algorithm = 'CH',\n\
                         storage_config = '.tests/test_data/ch/monaco.osrm',\n\
                         max_locations_trip = 3,\n\
@@ -77,9 +77,9 @@ NB_MODULE(osrm_ext, m) {
                     )\n\n"
             "Args:\n\
                 storage_config (string): File path string to storage config.\n\
-                EngineConfig (py_osrm.osrm_ext.EngineConfig): Keyword arguments from the EngineConfig class.\n\n"
+                EngineConfig (osrm.osrm_ext.EngineConfig): Keyword arguments from the EngineConfig class.\n\n"
             "Returns:\n\
-                __init__ (py_osrm.OSRM): A OSRM object.\n\n"
+                __init__ (osrm.OSRM): A OSRM object.\n\n"
             "Raises:\n\
                 RuntimeError: On invalid OSRM EngineConfig parameters."
             ))
@@ -115,9 +115,9 @@ NB_MODULE(osrm_ext, m) {
             return result;
         }, nb::raw_doc("Matches/snaps given GPS points to the road network in the most plausible way.\n\n"
             "Examples:\n\
-                >>> res = osrm.Match(match_params)\n\n"
+                >>> res = py_osrm.Match(match_params)\n\n"
             "Args:\n\
-                match_params (py_osrm.MatchParameters): MatchParameters Object.\n\n"
+                match_params (osrm.MatchParameters): MatchParameters Object.\n\n"
             "Returns:\n\
                 (json): [A Match JSON Response](https://project-osrm.org/docs/v5.24.0/api/#match-service).\n\n"
             "Raises:\n\
@@ -135,9 +135,9 @@ NB_MODULE(osrm_ext, m) {
             return result;
         }, nb::raw_doc("Snaps a coordinate to the street network and returns the nearest matches.\n\n"
             "Examples:\n\
-                >>> res = osrm.Nearest(nearest_params)\n\n"
+                >>> res = py_osrm.Nearest(nearest_params)\n\n"
             "Args:\n\
-                nearest_params (py_osrm.NearestParameters): NearestParameters Object.\n\n"
+                nearest_params (osrm.NearestParameters): NearestParameters Object.\n\n"
             "Returns:\n\
                 (json): [A Nearest JSON Response](https://project-osrm.org/docs/v5.24.0/api/#nearest-service).\n\n"
             "Raises:\n\
@@ -155,9 +155,9 @@ NB_MODULE(osrm_ext, m) {
             return result;
         }, nb::raw_doc("Finds the fastest route between coordinates in the supplied order.\n\n"
             "Examples:\n\
-                >>> res = osrm.Route(route_params)\n\n"
+                >>> res = py_osrm.Route(route_params)\n\n"
             "Args:\n\
-                route_params (py_osrm.RouteParameters): RouteParameters Object.\n\n"
+                route_params (osrm.RouteParameters): RouteParameters Object.\n\n"
             "Returns:\n\
                 (json): [A Route JSON Response](https://project-osrm.org/docs/v5.24.0/api/#route-service).\n\n"
             "Raises:\n\
@@ -175,9 +175,9 @@ NB_MODULE(osrm_ext, m) {
             return result;
         }, nb::raw_doc("Computes the duration of the fastest route between all pairs of supplied coordinates.\n\n"
             "Examples:\n\
-                >>> res = osrm.Table(table_params)\n\n"
+                >>> res = py_osrm.Table(table_params)\n\n"
             "Args:\n\
-                table_params (py_osrm.TableParameters): TableParameters Object.\n\n"
+                table_params (osrm.TableParameters): TableParameters Object.\n\n"
             "Returns:\n\
                 (json): [A Table JSON Response](https://project-osrm.org/docs/v5.24.0/api/#table-service).\n\n"
             "Raises:\n\
@@ -195,9 +195,9 @@ NB_MODULE(osrm_ext, m) {
             return obj;
         }, nb::raw_doc("Computes the duration of the fastest route between all pairs of supplied coordinates.\n\n"
             "Examples:\n\
-                >>> res = osrm.Tile(tile_params)\n\n"
+                >>> res = py_osrm.Tile(tile_params)\n\n"
             "Args:\n\
-                tile_params (py_osrm.TileParameters): TileParameters Object.\n\n"
+                tile_params (osrm.TileParameters): TileParameters Object.\n\n"
             "Returns:\n\
                 (json): [A Tile JSON Response](https://project-osrm.org/docs/v5.24.0/api/#tile-service).\n\n"
             "Raises:\n\
@@ -215,9 +215,9 @@ NB_MODULE(osrm_ext, m) {
             return result;
         }, nb::raw_doc("Solves the Traveling Salesman Problem using a greedy heuristic (farthest-insertion algorithm).\n\n"
             "Examples:\n\
-                >>> res = osrm.Trip(trip_params)\n\n"
+                >>> res = py_osrm.Trip(trip_params)\n\n"
             "Args:\n\
-                trip_params (py_osrm.TripParameters): TripParameters Object.\n\n"
+                trip_params (osrm.TripParameters): TripParameters Object.\n\n"
             "Returns:\n\
                 (json): [A Trip JSON Response](https://project-osrm.org/docs/v5.24.0/api/#trip-service).\n\n"
             "Raises:\n\

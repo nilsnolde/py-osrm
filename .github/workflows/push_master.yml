@@ -1,7 +1,7 @@
-name: Pull Request
+name: Push Master
 
 on:
-  pull_request:
+  push:
     branches:
       - main
     paths-ignore:
@@ -9,7 +9,7 @@ on:
 
 jobs:
   build_wheels:
-    name: PR - cp38*, ${{ matrix.platform }}
+    name: Push - cp38*, ${{ matrix.platform }}
     runs-on: ${{ matrix.platform }}-${{ matrix.version }}
     strategy:
       fail-fast: true
@@ -38,8 +38,6 @@ jobs:
     - name: Run CIBuildWheel
       uses: pypa/cibuildwheel@v2.14.1
       env:
-        CIBW_BUILD: cp38*
-
         CIBW_BEFORE_ALL_MACOS: |
           gh run download ${{ env.ARTIFACT_ID }} -n osrm-backend_${{ matrix.platform }}
           mkdir osrm-backend
