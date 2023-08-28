@@ -1,5 +1,5 @@
 # OSRM
-::: py_osrm.OSRM
+::: osrm.OSRM
     options:
       members:
         - OSRM
