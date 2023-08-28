@@ -34,4 +34,7 @@ args = [execpath]
 for i in range(2, len(sys.argv)):
     args.append(sys.argv[i])
 
-subprocess.call(args)
+# will stream any output to the shell
+# shell=True is safe here and lets people use "~" in paths etc
+proc = subprocess.run(args, encoding="utf-8", capture_output=True, shell=True)
+sys.exit(proc.returncode)
