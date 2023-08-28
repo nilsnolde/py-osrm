@@ -4,7 +4,7 @@ import sys
 
 if(len(sys.argv) < 2):
     print("Argument not provided")
-    exit()
+    sys.exit(1)
 
 execpath = site.getusersitepackages()+"/bin/"
 
