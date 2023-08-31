@@ -33,7 +33,7 @@ find_path(LibOSRM_INCLUDE_DIR osrm/osrm.hpp
   /opt/local
   /opt)
 find_path(LibOSRM_EXEC_DIR 
-  NAMES osrm-components osrm-contract osrm-customize osrm-datastore osrm-extract osrm-partition osrm-routed
+  NAMES osrm-datastore osrm-datastore.exe
   PATH_SUFFIXES osrm bin/osrm bin
   HINTS ${PC_LibOSRM_PREFIX}
   ~/Library/Frameworks
@@ -65,6 +65,10 @@ find_library(TEST_LibOSRM_DYNAMIC_LIBRARY Names libosrm.dylib libosrm.so
 set(LibOSRM_DEPENDENT_LIBRARIES ${PC_LibOSRM_STATIC_LDFLAGS})
 set(LibOSRM_LIBRARIES ${PC_LibOSRM_LDFLAGS})
 
+if (MSVC)
+  set(LibOSRM_LIBRARIES ${LibOSRM_LIBRARY_DIRS}/osrm.lib)
+endif()
+
 include(FindPackageHandleStandardArgs)
 # handle the QUIETLY and REQUIRED arguments and set LIBOSRM_FOUND to TRUE
 # if all listed variables are TRUE
@@ -75,4 +79,3 @@ find_package_handle_standard_args(LibOSRM DEFAULT_MSG
                                 LibOSRM_DEPENDENT_LIBRARIES
                                 LibOSRM_INCLUDE_DIR
                                 LibOSRM_EXEC_DIR)
-                                

@@ -117,4 +117,8 @@ else()
   )
 endif()
 
+if (MSVC)
+  add_definitions(-DBOOST_ALL_NO_LIB)
+endif()
+
 install(TARGETS ${EXT_NAME} LIBRARY DESTINATION ${PROJECT_NAME})
