@@ -24,7 +24,10 @@ wheel.packages = ["src/osrm", "src/bin"]
 build-verbosity = 1
 test-requires = "pytest"
 test-command = "pytest {project}/tests"
-before-test = "osrm-datastore {package}/tests/test_data/ch/monaco"
+before-test = """
+  make -C {project}/tests/data
+  python -m osrm datastore {package}/tests/data/ch/monaco
+"""
 
 archs = ["native"]
 build = "cp*"
@@ -37,3 +40,10 @@ repair-wheel-command = "auditwheel repair -w {dest_dir} {wheel}"
 
 [tool.cibuildwheel.macos]
 environment = "MACOSX_DEPLOYMENT_TARGET=10.14"
+
+[tool.cibuildwheel.windows]
+before-test = """
+  cd {project}/tests/data
+  windows-build-tests.bat
+  python -m osrm datastore {package}/tests/data/ch/monaco
+"""
