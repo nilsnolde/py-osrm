@@ -1,3 +1,4 @@
+import os
 import site
 import subprocess
 import sys
@@ -6,7 +7,21 @@ if(len(sys.argv) < 2):
     print("Argument not provided")
     sys.exit(1)
 
-exec = site.getusersitepackages()+"/bin/"
+searchpaths = site.getsitepackages()
+if(site.ENABLE_USER_SITE):
+    searchpaths.append(site.getusersitepackages())
+
+exec = ""
+
+for path in searchpaths:
+    currpath = path+"/bin/"
+    if os.path.isfile(currpath+"osrm-datastore") or os.path.isfile(currpath+"osrm-datastore.exe"):
+        exec = currpath
+        break
+
+if not exec:
+    print("Python OSRM executables not found")
+    sys.exit(1)
 
 if(sys.argv[1] == "components"):
     exec += "osrm-components"
