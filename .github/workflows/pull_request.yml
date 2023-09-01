@@ -26,12 +26,13 @@ jobs:
 
     - name: Get osrm-backend Artifact ID
       if: matrix.platform != 'ubuntu'
+      shell: bash
       run: |
         echo ARTIFACT_ID=$( \
           gh api -X GET \
           repos/${{ github.repository }}/actions/workflows/${{ env.ARTIFACT_WORKFLOW }}/runs \
-          --field status='success' \
-          --field per_page=1 \
+          -F status='success' \
+          -F per_page=1 \
           | jq '.["workflow_runs"][0].id') \
         >> $GITHUB_ENV
 
