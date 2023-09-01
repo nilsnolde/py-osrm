@@ -1,0 +1,11 @@
+# don't add src/bin to gitignore, or scikit-build-core won't add it to the wheel
+
+# build files
+build
+__pycache__
+
+# test files
+/tests/data/ch
+/tests/data/corech
+/tests/data/mld
+/tests/data/monaco.osrm*
