@@ -1,5 +1,3 @@
-# don't add src/bin to gitignore, or scikit-build-core won't add it to the wheel
-
 # build files
 build
 __pycache__
