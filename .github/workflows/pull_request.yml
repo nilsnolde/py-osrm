@@ -35,11 +35,13 @@ jobs:
           -F per_page=1 \
           | jq '.["workflow_runs"][0].id') \
         >> $GITHUB_ENV
+    
+    - name: Download osrm-backend Artifact
+      if: matrix.platform != 'ubuntu'
+      run: |
+        gh run download ${{ env.ARTIFACT_ID }} -n osrm-backend_${{ matrix.platform }}
 
     - name: Run CIBuildWheel
       uses: pypa/cibuildwheel@v2.14.1
       env:
         CIBW_BUILD: cp38*
-
-        CIBW_BEFORE_ALL_MACOS: |
-          gh run download ${{ env.ARTIFACT_ID }} -n osrm-backend_${{ matrix.platform }}
