@@ -14,8 +14,8 @@ if(site.ENABLE_USER_SITE):
 exec = ""
 
 for path in searchpaths:
-    currpath = path+"/bin/"
-    if os.path.isfile(currpath+"osrm-datastore") or os.path.isfile(currpath+"osrm-datastore.exe"):
+    currpath = path + "/bin/"
+    if os.path.isfile(currpath + "osrm-datastore") or os.path.isfile(currpath + "osrm-datastore.exe"):
         exec = currpath
         break
 
