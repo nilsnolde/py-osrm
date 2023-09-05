@@ -16,30 +16,10 @@ jobs:
       matrix:
         platform: [ubuntu]
         version: [latest]
-    env:
-      GITHUB_TOKEN: ${{ github.token }}
-      ARTIFACT_WORKFLOW: osrm-backend.yml
 
     steps:
     - name: Checkout Project
       uses: actions/checkout@v3
-
-    - name: Get osrm-backend Artifact ID
-      if: matrix.platform != 'ubuntu'
-      shell: bash
-      run: |
-        echo ARTIFACT_ID=$( \
-          gh api -X GET \
-          repos/${{ github.repository }}/actions/workflows/${{ env.ARTIFACT_WORKFLOW }}/runs \
-          -F status='success' \
-          -F per_page=1 \
-          | jq '.["workflow_runs"][0].id') \
-        >> $GITHUB_ENV
-    
-    - name: Download osrm-backend Artifact
-      if: matrix.platform != 'ubuntu'
-      run: |
-        gh run download ${{ env.ARTIFACT_ID }} -n osrm-backend_${{ matrix.platform }}
 
     - name: Run CIBuildWheel
       uses: pypa/cibuildwheel@v2.14.1
