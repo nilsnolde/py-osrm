@@ -14,7 +14,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        platform: [ubuntu, macos]
+        platform: [ubuntu]
         version: [latest]
     env:
       GITHUB_TOKEN: ${{ github.token }}
@@ -43,5 +43,3 @@ jobs:
 
     - name: Run CIBuildWheel
       uses: pypa/cibuildwheel@v2.14.1
-      env:
-        CIBW_BUILD: cp38*
