@@ -9,7 +9,7 @@ on:
 
 jobs:
   build_wheels:
-    name: PR - cp38*, ${{ matrix.platform }}
+    name: PR - cp*, ${{ matrix.platform }}
     runs-on: ${{ matrix.platform }}-${{ matrix.version }}
     strategy:
       fail-fast: true
