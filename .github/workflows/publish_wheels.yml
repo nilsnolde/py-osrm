@@ -26,37 +26,24 @@ jobs:
       uses: actions/checkout@v3
 
     - name: Get osrm-backend Artifact ID
-      if: matrix.platform == 'macos'
+      if: matrix.platform != 'ubuntu'
+      shell: bash
       run: |
         echo ARTIFACT_ID=$( \
           gh api -X GET \
           repos/${{ github.repository }}/actions/workflows/${{ env.ARTIFACT_WORKFLOW }}/runs \
-          --field status='success' \
-          --field per_page=1 \
+          -F status='success' \
+          -F per_page=1 \
           | jq '.["workflow_runs"][0].id') \
         >> $GITHUB_ENV
 
+    - name: Download osrm-backend Artifact
+      if: matrix.platform != 'ubuntu'
+      run: |
+        gh run download ${{ env.ARTIFACT_ID }} -n osrm-backend_${{ matrix.platform }}
+
     - name: Run CIBuildWheel
       uses: pypa/cibuildwheel@v2.14.1
-      env:
-        CIBW_BEFORE_ALL_MACOS: |
-          gh run download ${{ env.ARTIFACT_ID }} -n osrm-backend_${{ matrix.platform }}
-          mkdir osrm-backend
-          tar -zxf osrm-backend.tgz -C osrm-backend
-          cd osrm-backend
-
-          cp -r include /usr/local
-          cp -r third_party/flatbuffers/include /usr/local
-          cp -r third_party/variant/include /usr/local
-          cp -r profiles /usr/local/share/osrm/
-          cd build
-          cp *.a /usr/local/lib
-          cp osrm-* /usr/local/bin
-          cp libosrm.pc /usr/local/lib/pkgconfig
-
-          export HOMEBREW_NO_AUTO_UPDATE=1 HOMEBREW_NO_INSTALL_CLEANUP=1
-          brew install lua tbb boost@1.76
-          brew link boost@1.76
 
     - name: Upload Wheels
       uses: actions/upload-artifact@v3

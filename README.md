@@ -10,7 +10,7 @@ Platform | Arch
 ---|---
 Linux | x86_64
 MacOS | x86_64
-
+Windows | x86_64
 ---
 
 ## Installation

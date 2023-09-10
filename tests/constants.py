@@ -1,6 +1,6 @@
 import os
 
-path = os.path.dirname(os.path.abspath(__file__)) + "/test_data/"
+path = os.path.dirname(os.path.abspath(__file__)) + "/data/"
 
 # Constants and fixtures for Python tests on our Monaco dataset.
 

@@ -85,7 +85,9 @@ if(LibOSRM_FOUND)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${LibOSRM_CXXFLAGS}")
 
   file(GLOB OSRM_EXECS ${LibOSRM_EXEC_DIR}/osrm-*)
-  file(COPY ${OSRM_EXECS} DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/src/bin)
+  install(FILES ${OSRM_EXECS} TYPE BIN 
+          PERMISSIONS OWNER_WRITE OWNER_READ GROUP_READ WORLD_READ 
+          OWNER_EXECUTE GROUP_EXECUTE WORLD_EXECUTE)
 else()
   include(FetchContent)
   FetchContent_Declare(
@@ -115,6 +117,10 @@ else()
     PRIVATE
       osrm
   )
+endif()
+
+if (MSVC)
+  add_definitions(-DBOOST_ALL_NO_LIB)
 endif()
 
 install(TARGETS ${EXT_NAME} LIBRARY DESTINATION ${PROJECT_NAME})
