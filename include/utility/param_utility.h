@@ -1,12 +1,12 @@
 #ifndef OSRM_NB_PARAM_UTIL_H
 #define OSRM_NB_PARAM_UTIL_H
 
-#include "engine/approach.hpp"
 #include "engine/api/base_parameters.hpp"
 #include "engine/api/match_parameters.hpp"
 #include "engine/api/route_parameters.hpp"
 #include "engine/api/table_parameters.hpp"
 #include "engine/api/trip_parameters.hpp"
+#include "types/boost_optional_nb.h"
 
 #include <boost/optional.hpp>
 
@@ -64,7 +64,7 @@ void assign_baseparameters(BaseParameters* params,
                            std::vector<boost::optional<osrm::engine::Hint>> hints,
                            std::vector<boost::optional<double>> radiuses,
                            std::vector<boost::optional<osrm::engine::Bearing>> bearings,
-                           const std::vector<boost::optional<osrm::engine::Approach>>& approaches,
+                           std::vector<boost::optional<osrm::engine::Approach>> approaches,
                            bool generate_hints,
                            std::vector<std::string> exclude,
                            const BaseParameters::SnappingType snapping);

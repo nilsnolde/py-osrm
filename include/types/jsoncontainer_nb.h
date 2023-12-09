@@ -18,7 +18,7 @@ using JSONValue = mapbox::util::variant<json::String,
                                         json::True,
                                         json::False,
                                         json::Null>;
-//Custom Type Casters
+//Variant Type Caster (nanobind/stl/variant.h)
 namespace nanobind::detail {
 
 template <> struct type_caster<JSONValue> : type_caster_base<JSONValue> {

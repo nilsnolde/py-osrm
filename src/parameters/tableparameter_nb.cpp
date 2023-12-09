@@ -2,6 +2,7 @@
 
 #include "engine/api/table_parameters.hpp"
 #include "utility/param_utility.h"
+#include "types/boost_optional_nb.h"
 
 #include <nanobind/nanobind.h>
 #include <nanobind/operators.h>
@@ -14,13 +15,6 @@ using namespace nb::literals;
 void init_TableParameters(nb::module_& m) {
     using osrm::engine::api::BaseParameters;
     using osrm::engine::api::TableParameters;
-static const std::unordered_map<std::string, TableParameters::AnnotationsType> table_annotations_map {
-    { "none", TableParameters::AnnotationsType::None },
-    { std::string(), TableParameters::AnnotationsType::None },
-    { "duration", TableParameters::AnnotationsType::Duration },
-    { "distance", TableParameters::AnnotationsType::Distance },
-    { "all", TableParameters::AnnotationsType::All }
-};
 
     nb::class_<TableParameters, BaseParameters>(m, "TableParameters")
         .def(nb::init<>(), nb::raw_doc("Instantiates an instance of TableParameters.\n\n"
@@ -72,7 +66,7 @@ static const std::unordered_map<std::string, TableParameters::AnnotationsType> t
                     std::vector<boost::optional<osrm::engine::Hint>> hints,
                     std::vector<boost::optional<double>> radiuses,
                     std::vector<boost::optional<osrm::engine::Bearing>> bearings,
-                    const std::vector<boost::optional<osrm::engine::Approach>>& approaches,
+                    std::vector<boost::optional<osrm::engine::Approach>> approaches,
                     bool generate_hints,
                     std::vector<std::string> exclude,
                     const BaseParameters::SnappingType snapping
@@ -106,7 +100,7 @@ static const std::unordered_map<std::string, TableParameters::AnnotationsType> t
                     "hints"_a = std::vector<boost::optional<osrm::engine::Hint>>(),
                     "radiuses"_a = std::vector<boost::optional<double>>(),
                     "bearings"_a = std::vector<boost::optional<osrm::engine::Bearing>>(),
-                    "approaches"_a = std::vector<std::string*>(),
+                    "approaches"_a = std::vector<boost::optional<osrm::engine::Approach>>(),
                     "generate_hints"_a = true,
                     "exclude"_a = std::vector<std::string>(),
                     "snapping"_a = std::string()
@@ -126,7 +120,7 @@ static const std::unordered_map<std::string, TableParameters::AnnotationsType> t
         }, "Instantiates a FallbackCoordinateType based on provided String value.")
         .def("__repr__", [](TableParameters::FallbackCoordinateType type) {
             return osrm_nb_util::enum_to_str(type, "TableFallbackCoordinateType", fallback_map);
-        }, "Return a String based on FallbackCoordinateType value.");
+        }, "Return a readable value based on FallbackCoordinateType value.");
     nb::implicitly_convertible<std::string, TableParameters::FallbackCoordinateType>();
 
     nb::class_<TableParameters::AnnotationsType>(m, "TableAnnotationsType")
@@ -136,7 +130,7 @@ static const std::unordered_map<std::string, TableParameters::AnnotationsType> t
         }, "Instantiates a AnnotationsType based on provided String value.")
         .def("__repr__", [](TableParameters::AnnotationsType type) {
             return std::to_string((int)type);
-        }, "Return a String based on AnnotationsType value.")
+        }, "Return a readable value based on AnnotationsType value.")
         .def("__and__", [](TableParameters::AnnotationsType lhs, TableParameters::AnnotationsType rhs) {
             return lhs & rhs;
         }, nb::is_operator(), "Return the bitwise AND result of two AnnotationsTypes.")

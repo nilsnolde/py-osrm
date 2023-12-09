@@ -19,7 +19,7 @@
 #include "types/bearing_nb.h"
 #include "types/coordinate_nb.h"
 #include "types/jsoncontainer_nb.h"
-#include "types/optional_nb.h"
+#include "types/boost_optional_nb.h"
 #include "parameters/baseparameter_nb.h"
 #include "parameters/matchparameter_nb.h"
 #include "parameters/nearestparameter_nb.h"
@@ -49,7 +49,6 @@ NB_MODULE(osrm_ext, m) {
     init_Bearing(m);
     init_Coordinate(m);
     init_JSONContainer(m);
-    init_Optional(m);
 
     init_BaseParameters(m);
     init_NearestParameters(m);

@@ -2,6 +2,7 @@
 
 #include "engine/api/route_parameters.hpp"
 #include "utility/param_utility.h"
+#include "types/boost_optional_nb.h"
 
 #include <nanobind/nanobind.h>
 #include <nanobind/operators.h>
@@ -71,7 +72,7 @@ void init_RouteParameters(nb::module_& m) {
                     std::vector<boost::optional<osrm::engine::Hint>> hints,
                     std::vector<boost::optional<double>> radiuses,
                     std::vector<boost::optional<osrm::engine::Bearing>> bearings,
-                    const std::vector<boost::optional<osrm::engine::Approach>>& approaches,
+                    std::vector<boost::optional<osrm::engine::Approach>> approaches,
                     bool generate_hints,
                     std::vector<std::string> exclude,
                     const BaseParameters::SnappingType snapping
@@ -108,7 +109,7 @@ void init_RouteParameters(nb::module_& m) {
                     "hints"_a = std::vector<boost::optional<osrm::engine::Hint>>(),
                     "radiuses"_a = std::vector<boost::optional<double>>(),
                     "bearings"_a = std::vector<boost::optional<osrm::engine::Bearing>>(),
-                    "approaches"_a = std::vector<std::string*>(),
+                    "approaches"_a = std::vector<boost::optional<osrm::engine::Approach>>(),
                     "generate_hints"_a = true,
                     "exclude"_a = std::vector<std::string>(),
                     "snapping"_a = std::string()
@@ -129,7 +130,7 @@ void init_RouteParameters(nb::module_& m) {
         }, "Instantiates a GeometriesType based on provided String value.")
         .def("__repr__", [](RouteParameters::GeometriesType type) {
             return osrm_nb_util::enum_to_str(type, "RouteGeometriesType", geometries_map);
-        }, "Return a String based on GeometriesType value.");
+        }, "Return a readable value based on GeometriesType value.");
     nb::implicitly_convertible<std::string, RouteParameters::GeometriesType>();
 
     nb::class_<RouteParameters::OverviewType>(m, "RouteOverviewType")
@@ -139,7 +140,7 @@ void init_RouteParameters(nb::module_& m) {
         }, "Instantiates a OverviewType based on provided String value.")
         .def("__repr__", [](RouteParameters::OverviewType type) {
             return osrm_nb_util::enum_to_str(type, "RouteOverviewType", overview_map);
-        }, "Return a String based on OverviewType value.");
+        }, "Return a readable value based on OverviewType value.");
     nb::implicitly_convertible<std::string, RouteParameters::OverviewType>();
 
     nb::class_<RouteParameters::AnnotationsType>(m, "RouteAnnotationsType")
@@ -149,7 +150,7 @@ void init_RouteParameters(nb::module_& m) {
         }, "Instantiates a AnnotationsType based on provided String value.")
         .def("__repr__", [](RouteParameters::AnnotationsType type) {
             return std::to_string((int)type);
-        }, "Return a String based on AnnotationsType value.")
+        }, "Return a readable value based on AnnotationsType value.")
         .def("__and__", [](RouteParameters::AnnotationsType lhs, RouteParameters::AnnotationsType rhs) {
             return lhs & rhs;
         }, nb::is_operator(), "Return the bitwise AND result of two AnnotationsTypes.")
