@@ -51,7 +51,6 @@ set(SRCS
   src/parameters/tileparameter_nb.cpp
   src/parameters/tripparameter_nb.cpp
   
-  src/types/optional_nb.cpp
   src/types/coordinate_nb.cpp
   src/types/jsoncontainer_nb.cpp
   src/types/approach_nb.cpp
