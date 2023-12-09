@@ -2,6 +2,7 @@
 
 #include "engine/api/trip_parameters.hpp"
 #include "utility/param_utility.h"
+#include "types/boost_optional_nb.h"
 
 #include <nanobind/nanobind.h>
 #include <nanobind/stl/string.h>
@@ -54,7 +55,7 @@ void init_TripParameters(nb::module_& m) {
                     std::vector<boost::optional<osrm::engine::Hint>> hints,
                     std::vector<boost::optional<double>> radiuses,
                     std::vector<boost::optional<osrm::engine::Bearing>> bearings,
-                    const std::vector<boost::optional<osrm::engine::Approach>>& approaches,
+                    std::vector<boost::optional<osrm::engine::Approach>> approaches,
                     bool generate_hints,
                     std::vector<std::string> exclude,
                     const BaseParameters::SnappingType snapping
@@ -97,7 +98,7 @@ void init_TripParameters(nb::module_& m) {
                     "hints"_a = std::vector<boost::optional<osrm::engine::Hint>>(),
                     "radiuses"_a = std::vector<boost::optional<double>>(),
                     "bearings"_a = std::vector<boost::optional<osrm::engine::Bearing>>(),
-                    "approaches"_a = std::vector<std::string*>(),
+                    "approaches"_a = std::vector<boost::optional<osrm::engine::Approach>>(),
                     "generate_hints"_a = true,
                     "exclude"_a = std::vector<std::string>(),
                     "snapping"_a = std::string()
@@ -114,7 +115,7 @@ void init_TripParameters(nb::module_& m) {
         }, "Instantiates a SourceType based on provided String value.")
         .def("__repr__", [](TripParameters::SourceType type) {
             return osrm_nb_util::enum_to_str(type, "TripSourceType", source_map);
-        }, "Return a String based on SourceType value.");
+        }, "Return a readable value based on SourceType value.");
     nb::implicitly_convertible<std::string, TripParameters::SourceType>();
 
     nb::class_<TripParameters::DestinationType>(m, "TripDestinationType")
@@ -124,6 +125,6 @@ void init_TripParameters(nb::module_& m) {
         }, "Instantiates a DestinationType based on provided String value.")
         .def("__repr__", [](TripParameters::DestinationType type) {
             return osrm_nb_util::enum_to_str(type, "TripDestinationType", dest_map);
-        }, "Return a String based on DestinationType value.");
+        }, "Return a readable value based on DestinationType value.");
     nb::implicitly_convertible<std::string, TripParameters::DestinationType>();
 }

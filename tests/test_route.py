@@ -201,47 +201,42 @@ class TestRoute:
         
         assert(full_res["routes"][0]["geometry"] != simplified_res["routes"][0]["geometry"])
 
-    # def test_route_validbearings(self):
-    #     route_params = osrm.RouteParameters(
-    #         coordinates = two_test_coordinates,
-    #         bearings = [(200, 180), (250, 180)]       
-    #     )
-    #     res = self.py_osrm.Route(route_params)
-    #  
-    #     assert(res["routes"][0])
+    def test_route_validbearings(self):
+        route_params = osrm.RouteParameters(
+            coordinates = two_test_coordinates,
+            bearings = [(200, 180), (250, 180)]       
+        )
+        res = self.py_osrm.Route(route_params)
+     
+        assert(res["routes"][0])
 
-    #     route_params.bearings = [None, (200, 180)]
-    #     res = self.py_osrm.Route(route_params)
-    #  
-    #     assert(res["routes"][0])
+        route_params.bearings = [None, (200, 180)]
+        res = self.py_osrm.Route(route_params)
+     
+        assert(res["routes"][0])
 
-    # def test_route_validradius(self):
-    #     route_params = osrm.RouteParameters(
-    #         coordinates = two_test_coordinates,
-    #         radiuses = [100, 100]       
-    #     )
-    #     res = self.py_osrm.Route(route_params)
-    #  
+    def test_route_validradius(self):
+        route_params = osrm.RouteParameters(
+            coordinates = two_test_coordinates,
+            radiuses = [100, 100]       
+        )
+        res = self.py_osrm.Route(route_params)    
 
-    #     route_params.radiuses = [None, None]
-    #     res = self.py_osrm.Route(route_params)
-    #  
+        route_params.radiuses = [None, None]
+        res = self.py_osrm.Route(route_params)
 
-    #     route_params.radiuses = [100, None]
-    #     res = self.py_osrm.Route(route_params)
-    #  
+        route_params.radiuses = [100, None]
+        res = self.py_osrm.Route(route_params)
+        
+    def test_route_validapproaches(self):
+        route_params = osrm.RouteParameters(
+            coordinates = two_test_coordinates,
+            approaches = [None, "curb"]
+        )
+        res = self.py_osrm.Route(route_params)
 
-    # def test_route_validapproaches(self):
-    #     route_params = osrm.RouteParameters(
-    #         coordinates = two_test_coordinates,
-    #         approaches = [None, osrm.Approach.CURB]
-    #     )
-    #     res = self.py_osrm.Route(route_params)
-    #  
-
-    #     route_params.approaches = [osrm.Approach.UNRESTRICTED, None]
-    #     res = self.py_osrm.Route(route_params)
-    #  
+        route_params.approaches = ["unrestricted", None]
+        res = self.py_osrm.Route(route_params)
 
     def test_route_customlimitsmld(self):
         py_osrm = osrm.OSRM(

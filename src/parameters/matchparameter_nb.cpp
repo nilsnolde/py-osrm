@@ -2,6 +2,7 @@
 
 #include "engine/api/match_parameters.hpp"
 #include "utility/param_utility.h"
+#include "types/boost_optional_nb.h"
 
 #include <nanobind/nanobind.h>
 #include <nanobind/stl/string.h>
@@ -54,7 +55,7 @@ void init_MatchParameters(nb::module_& m) {
                     std::vector<boost::optional<osrm::engine::Hint>> hints,
                     std::vector<boost::optional<double>> radiuses,
                     std::vector<boost::optional<osrm::engine::Bearing>> bearings,
-                    const std::vector<boost::optional<osrm::engine::Approach>>& approaches,
+                    std::vector<boost::optional<osrm::engine::Approach>> approaches,
                     bool generate_hints,
                     std::vector<std::string> exclude,
                     const BaseParameters::SnappingType snapping
@@ -98,7 +99,7 @@ void init_MatchParameters(nb::module_& m) {
                     "hints"_a = std::vector<boost::optional<osrm::engine::Hint>>(),
                     "radiuses"_a = std::vector<boost::optional<double>>(),
                     "bearings"_a = std::vector<boost::optional<osrm::engine::Bearing>>(),
-                    "approaches"_a = std::vector<std::string*>(),
+                    "approaches"_a = std::vector<boost::optional<osrm::engine::Approach>>(),
                     "generate_hints"_a = true,
                     "exclude"_a = std::vector<std::string>(),
                     "snapping"_a = std::string()
@@ -115,6 +116,6 @@ void init_MatchParameters(nb::module_& m) {
         }, "Instantiates a GapsType based on provided String value.")
         .def("__repr__", [](MatchParameters::GapsType type) {
             return osrm_nb_util::enum_to_str(type, "MatchGapsType", gaps_map);
-        }, "Return a String based on GapsType value.");
+        }, "Return a readable value based on GapsType value.");
     nb::implicitly_convertible<std::string, MatchParameters::GapsType>();
 }

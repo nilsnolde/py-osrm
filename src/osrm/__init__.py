@@ -2,9 +2,6 @@ from .osrm_ext import (
     OSRM,
     EngineConfig,
 
-    Bearing,
-    Coordinate,
-
     RouteParameters,
     NearestParameters,
     TableParameters,

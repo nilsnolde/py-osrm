@@ -6,6 +6,7 @@
 #include "engine/api/route_parameters.hpp"
 #include "engine/api/table_parameters.hpp"
 #include "engine/api/trip_parameters.hpp"
+#include "types/boost_optional_nb.h"
 
 #include <boost/optional.hpp>
 
@@ -27,7 +28,7 @@ void assign_baseparameters(BaseParameters* params,
                            std::vector<boost::optional<osrm::engine::Hint>> hints,
                            std::vector<boost::optional<double>> radiuses,
                            std::vector<boost::optional<osrm::engine::Bearing>> bearings,
-                           const std::vector<boost::optional<osrm::engine::Approach>>& approaches,
+                           std::vector<boost::optional<osrm::engine::Approach>> approaches,
                            bool generate_hints,
                            std::vector<std::string> exclude,
                            const BaseParameters::SnappingType snapping)
@@ -36,7 +37,7 @@ void assign_baseparameters(BaseParameters* params,
     params->hints = std::move(hints);
     params->radiuses = std::move(radiuses);
     params->bearings = std::move(bearings);
-    params->approaches = approaches;
+    params->approaches = std::move(approaches);
     params->generate_hints = generate_hints;
     params->exclude = std::move(exclude);
     params->snapping = snapping;    
