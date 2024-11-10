@@ -34,10 +34,10 @@ void init_NearestParameters(nb::module_& m) {
             ))
         .def("__init__", [](NearestParameters* t,
                 std::vector<osrm::util::Coordinate> coordinates,
-                std::vector<boost::optional<osrm::engine::Hint>> hints,
-                std::vector<boost::optional<double>> radiuses,
-                std::vector<boost::optional<osrm::engine::Bearing>> bearings,
-                const std::vector<boost::optional<osrm::engine::Approach>>& approaches,
+                std::vector<std::optional<osrm::engine::Hint>> hints,
+                std::vector<std::optional<double>> radiuses,
+                std::vector<std::optional<osrm::engine::Bearing>> bearings,
+                const std::vector<std::optional<osrm::engine::Approach>>& approaches,
                 bool generate_hints,
                 std::vector<std::string> exclude,
                 const BaseParameters::SnappingType snapping
@@ -55,9 +55,9 @@ void init_NearestParameters(nb::module_& m) {
                                                     snapping);
             },
                 "coordinates"_a = std::vector<osrm::util::Coordinate>(),
-                "hints"_a = std::vector<boost::optional<osrm::engine::Hint>>(),
-                "radiuses"_a = std::vector<boost::optional<double>>(),
-                "bearings"_a = std::vector<boost::optional<osrm::engine::Bearing>>(),
+                "hints"_a = std::vector<std::optional<osrm::engine::Hint>>(),
+                "radiuses"_a = std::vector<std::optional<double>>(),
+                "bearings"_a = std::vector<std::optional<osrm::engine::Bearing>>(),
                 "approaches"_a = std::vector<std::string*>(),
                 "generate_hints"_a = true,
                 "exclude"_a = std::vector<std::string>(),
