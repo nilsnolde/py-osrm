@@ -79,7 +79,7 @@ void populate_cfg_from_kwargs(const nb::kwargs& kwargs, EngineConfig& config) {
                 config.default_radius = UNLIMITED;
             }
             catch(const nb::cast_error&) {
-                assign_val(config.default_radius.get(), val);
+                assign_val(config.default_radius, val);
             }
         } },
         { "max_alternatives", [&config](const std::pair<nb::handle, nb::handle>& val) {
