@@ -20,7 +20,7 @@ void init_JSONContainer(nb::module_& m) {
         })
         .def("__repr__", [](const json::Object& obj) {
             ValueStringifyVisitor visitor;
-            return visitor.visitobject(obj);
+            return visitor(obj);
         })
         .def("__getitem__", [](json::Object& obj, const std::string& key) {
             return obj.values[key];
@@ -40,7 +40,7 @@ void init_JSONContainer(nb::module_& m) {
         })
         .def("__repr__", [](const json::Array& arr) {
             ValueStringifyVisitor visitor;
-            return visitor.visitarray(arr);
+            return visitor(arr);
         })
         .def("__getitem__", [](json::Array& arr, int i) {
             return arr.values[i];
