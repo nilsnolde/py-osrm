@@ -12,6 +12,7 @@
 
 #include <unordered_map>
 #include <stdexcept>
+#include <filesystem>
 
 #define UNLIMITED -1
 
@@ -90,7 +91,7 @@ void populate_cfg_from_kwargs(const nb::kwargs& kwargs, EngineConfig& config) {
         { "memory_file", [&config](const std::pair<nb::handle, nb::handle>& val) {
             std::string str;
             assign_val(str, val);
-            config.memory_file = boost::filesystem::path(str);
+            config.memory_file = std::filesystem::path(str);
         } },
         { "use_mmap", [&config](const std::pair<nb::handle, nb::handle>& val) {
             assign_val(config.use_mmap, val);
