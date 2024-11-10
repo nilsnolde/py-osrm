@@ -37,8 +37,8 @@ void check_status(osrm::engine::Status status, osrm::util::json::Object& res) {
         return;
     }
 
-    const std::string code = res.values["code"].get<osrm::util::json::String>().value;
-    const std::string msg = res.values["message"].get<osrm::util::json::String>().value;
+    const std::string code = std::get<osrm::util::json::String>(res.values["code"]).value;
+    const std::string msg = std::get<osrm::util::json::String>(res.values["message"]).value;
     
     throw std::runtime_error(code + " - " + msg);
 }
