@@ -83,8 +83,9 @@ NB_MODULE(osrm_ext, m) {
             "Raises:\n\
                 RuntimeError: On invalid OSRM EngineConfig parameters."
             ))
-        .def("__init__", [](OSRM* t, const std::string& storage_path) { 
+        .def("__init__", [](OSRM* t, const std::string& storage_path, const nb::kwargs& kwargs) { 
             EngineConfig config;
+            osrm_nb_util::populate_cfg_from_kwargs(kwargs, config);
             config.storage_config = osrm::storage::StorageConfig(storage_path);
 
             if(!config.IsValid()) {
