@@ -1,8 +1,6 @@
 # py-osrm
-![PUSH_CI](https://github.com/gis-ops/py-osrm/actions/workflows/push_master.yml/badge.svg)
-
-**py-osrm is a Python package that binds to [osrm-backend](https://github.com/Project-OSRM/osrm-backend) using [nanobind](https://github.com/wjakob/nanobind).**
-**The original repo seems to bee a bit stale and does not compile on linux. So I tried my best to get it working again.**
+**py-osrm is a Python package that binds to [osrm-backend](https://github.com/Project-OSRM/osrm-backend) using [nanobind](https://github.com/wjakob/nanobind).
+The original repo seems to be a bit stale and does not compile on linux. So I tried my best to get it working again.**
 
 ## ToDos
 - [x] make it compile in a docker container
@@ -15,15 +13,15 @@
 ---
 
 ## Supported Platforms
-Platform | Arch
----|---
-Linux | x86_64
-MacOS | x86_64
-Windows | x86_64
+Platform | Arch | Compilation
+---|--- | ---
+Linux | x86_64 | tested
+MacOS | x86_64 | untested
+Windows | x86_64 | untested
 ---
 
 ## Installation
-py-osrm is supported on **CPython 3.8+**, and can be installed from source via running the following command in the source folder:
+py-osrm is supported on **CPython 3.8+ (tested on 3.11)**, and can be installed from source via running the following command in the source folder:
 ```
 pip install .
 ```
