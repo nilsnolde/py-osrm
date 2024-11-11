@@ -76,6 +76,10 @@ target_include_directories(${EXT_NAME}
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 find_package(LibOSRM)
 
+# ignore BOOST deprecated headers
+add_definitions("-DBOOST_ALLOW_DEPRECATED_HEADERS")
+add_definitions("-DBOOST_BIND_GLOBAL_PLACEHOLDERS")
+
 if(LibOSRM_FOUND)
   target_link_libraries(${EXT_NAME}
     PRIVATE
@@ -95,7 +99,7 @@ else()
     GIT_REPOSITORY https://github.com/Project-OSRM/osrm-backend
     GIT_TAG master
   )
-  SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-array-bounds -Wno-uninitialized -Wno-free-nonheap-object")
+  SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-array-bounds -Wno-uninitialized -Wno-free-nonheap-object -Wno-dev")
 
   FetchContent_GetProperties(libosrm)
   if(NOT libosrm_POPULATED)
