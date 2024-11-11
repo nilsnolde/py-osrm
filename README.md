@@ -2,6 +2,15 @@
 ![PUSH_CI](https://github.com/gis-ops/py-osrm/actions/workflows/push_master.yml/badge.svg)
 
 **py-osrm is a Python package that binds to [osrm-backend](https://github.com/Project-OSRM/osrm-backend) using [nanobind](https://github.com/wjakob/nanobind).**
+**The original repo seems to bee a bit stale and does not compile on linux. So I tried my best to get it working again.**
+
+## ToDos
+- [x] make it compile in a docker container
+- [ ] provide a docker file
+- [ ] update the readme with proper examples
+- [ ] switch to nanobind 2
+- [ ] skip the json part an provide a numpy adapter
+- [ ] use a minimum of dirty hacks
 
 ---
 
