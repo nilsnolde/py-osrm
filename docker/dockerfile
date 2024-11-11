@@ -1,0 +1,16 @@
+FROM python:3.11
+
+# installs dependencies for libosrm and py-osrm build
+# by using gcc12+ boost is missing a otherwise implicit import of std:exchange by utility
+# unfortunatly currently I have to hack it by a sed insert
+RUN apt update && \
+    apt install -y build-essential libboost-all-dev lua5.4 liblua5.4-dev libtbb-dev && \
+    sed -i '/#define BOOST_ASIO_AWAITABLE_HPP/a #include <utility>' /usr/include/boost/asio/awaitable.hpp
+
+RUN mkdir /osrm && \
+    cd /osrm && \
+    git clone https://github.com/WoT86/py-osrm.git && \
+    cd py-osrm && \
+    pip install .
+
+VOLUME /data
