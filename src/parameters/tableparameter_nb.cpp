@@ -4,9 +4,6 @@
 #include "utility/param_utility.h"
 
 #include <nanobind/nanobind.h>
-#include <nanobind/operators.h>
-#include <nanobind/stl/string.h>
-#include <nanobind/stl/vector.h>
 
 namespace nb = nanobind;
 using namespace nb::literals;
@@ -14,13 +11,7 @@ using namespace nb::literals;
 void init_TableParameters(nb::module_& m) {
     using osrm::engine::api::BaseParameters;
     using osrm::engine::api::TableParameters;
-static const std::unordered_map<std::string, TableParameters::AnnotationsType> table_annotations_map {
-    { "none", TableParameters::AnnotationsType::None },
-    { std::string(), TableParameters::AnnotationsType::None },
-    { "duration", TableParameters::AnnotationsType::Duration },
-    { "distance", TableParameters::AnnotationsType::Distance },
-    { "all", TableParameters::AnnotationsType::All }
-};
+
     // "Instantiates an instance of TableParameters.
     //         "Examples:
     //             >>> table_params = osrm.TableParameters(
@@ -59,8 +50,18 @@ static const std::unordered_map<std::string, TableParameters::AnnotationsType> t
     //             scale_factor: Scales the table duration values by this number (use in conjunction with annotations=durations).
     //             BaseParameters (osrm.osrm_ext.BaseParameters): Attributes from parent class."
 
-    nb::class_<TableParameters, BaseParameters>(m, "TableParameters")
-        .def(nb::init<>())
+    nb::class_<TableParameters, BaseParameters> tp(m, "TableParameters");
+        nb::enum_<TableParameters::FallbackCoordinateType>(tp, "FallbackCoordinateType")
+            .value("input", TableParameters::FallbackCoordinateType::Input)
+            .value("snapped", TableParameters::FallbackCoordinateType::Snapped);
+
+        nb::enum_<TableParameters::AnnotationsType>(tp, "AnnotationsType")
+            .value("none", TableParameters::AnnotationsType::None)
+            .value("duration", TableParameters::AnnotationsType::Duration)
+            .value("distance", TableParameters::AnnotationsType::Distance)
+            .value("all", TableParameters::AnnotationsType::All);
+
+        tp.def(nb::init<>())
         .def("__init__", [](TableParameters* t,
                 std::vector<std::size_t> sources,
                 std::vector<std::size_t> destinations,
@@ -118,33 +119,4 @@ static const std::unordered_map<std::string, TableParameters::AnnotationsType> t
         .def_rw("annotations", &TableParameters::annotations)
         .def_rw("scale_factor", &TableParameters::scale_factor)
         .def("IsValid", &TableParameters::IsValid);
-
-    nb::class_<TableParameters::FallbackCoordinateType>(m, "TableFallbackCoordinateType")
-        .def("__init__", [](TableParameters::FallbackCoordinateType* t, const std::string& str) {
-            TableParameters::FallbackCoordinateType fallback = osrm_nb_util::str_to_enum(str, "TableFallbackCoordinateType", fallback_map);
-            new (t) TableParameters::FallbackCoordinateType(fallback);
-        }, "Instantiates a FallbackCoordinateType based on provided String value.")
-        .def("__repr__", [](TableParameters::FallbackCoordinateType type) {
-            return osrm_nb_util::enum_to_str(type, "TableFallbackCoordinateType", fallback_map);
-        }, "Return a String based on FallbackCoordinateType value.");
-    nb::implicitly_convertible<std::string, TableParameters::FallbackCoordinateType>();
-
-    nb::class_<TableParameters::AnnotationsType>(m, "TableAnnotationsType")
-        .def("__init__", [](TableParameters::AnnotationsType* t, const std::string& str) {
-            TableParameters::AnnotationsType annotation = osrm_nb_util::str_to_enum(str, "TableAnnotationsType", table_annotations_map);
-            new (t) TableParameters::AnnotationsType(annotation);
-        }, "Instantiates a AnnotationsType based on provided String value.")
-        .def("__repr__", [](TableParameters::AnnotationsType type) {
-            return std::to_string((int)type);
-        }, "Return a String based on AnnotationsType value.")
-        .def("__and__", [](TableParameters::AnnotationsType lhs, TableParameters::AnnotationsType rhs) {
-            return lhs & rhs;
-        }, nb::is_operator(), "Return the bitwise AND result of two AnnotationsTypes.")
-        .def("__or__", [](TableParameters::AnnotationsType lhs, TableParameters::AnnotationsType rhs) {
-            return lhs | rhs;
-        }, nb::is_operator(), "Return the bitwise OR result of two AnnotationsTypes.")
-        .def("__ior__", [](TableParameters::AnnotationsType& lhs, TableParameters::AnnotationsType rhs) {
-            return lhs = lhs | rhs;
-        }, nb::is_operator(), "Add the bitwise OR value of another AnnotationsType.");
-    nb::implicitly_convertible<std::string, TableParameters::AnnotationsType>();
 }

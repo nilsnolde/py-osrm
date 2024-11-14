@@ -4,9 +4,6 @@
 #include "utility/param_utility.h"
 
 #include <nanobind/nanobind.h>
-#include <nanobind/operators.h>
-#include <nanobind/stl/string.h>
-#include <nanobind/stl/vector.h>
 
 namespace nb = nanobind;
 using namespace nb::literals;
@@ -58,8 +55,28 @@ void init_RouteParameters(nb::module_& m) {
     //             continue_straight (bool): Forces the route to keep going straight at waypoints, constraining u-turns.
     //             BaseParameters (osrm.osrm_ext.BaseParameters): Attributes from parent class."
 
-    nb::class_<RouteParameters, BaseParameters>(m, "RouteParameters")
-        .def(nb::init<>())
+    nb::class_<RouteParameters, BaseParameters> rp(m, "RouteParameters");
+        nb::enum_<RouteParameters::GeometriesType>(rp, "GeometriesType")
+            .value("polyline", RouteParameters::GeometriesType::Polyline)
+            .value("polyline6", RouteParameters::GeometriesType::Polyline6)
+            .value("geojson", RouteParameters::GeometriesType::GeoJSON);
+
+        nb::enum_<RouteParameters::OverviewType>(rp, "OverviewType")
+            .value("simplified", RouteParameters::OverviewType::Simplified)
+            .value("full", RouteParameters::OverviewType::Full)
+            .value("false", RouteParameters::OverviewType::False);
+
+        nb::enum_<RouteParameters::AnnotationsType>(rp, "AnnotationsType")
+            .value("none", RouteParameters::AnnotationsType::None)
+            .value("duration", RouteParameters::AnnotationsType::Duration)
+            .value("nodes", RouteParameters::AnnotationsType::Nodes)
+            .value("distance", RouteParameters::AnnotationsType::Distance)
+            .value("weight", RouteParameters::AnnotationsType::Weight)
+            .value("datasources", RouteParameters::AnnotationsType::Datasources)
+            .value("speed", RouteParameters::AnnotationsType::Speed)
+            .value("all", RouteParameters::AnnotationsType::All);
+
+        rp.def(nb::init<>())
         .def("__init__", [](RouteParameters* t,
                 const bool steps,
                 int number_of_alternatives,
@@ -122,43 +139,4 @@ void init_RouteParameters(nb::module_& m) {
         .def_rw("overview", &RouteParameters::overview)
         .def_rw("continue_straight", &RouteParameters::continue_straight)
         .def("IsValid", &RouteParameters::IsValid);
-
-    nb::class_<RouteParameters::GeometriesType>(m, "RouteGeometriesType")
-        .def("__init__", [](RouteParameters::GeometriesType* t, const std::string& str) {
-            RouteParameters::GeometriesType geometries = osrm_nb_util::str_to_enum(str, "RouteGeometriesType", geometries_map);
-            new (t) RouteParameters::GeometriesType(geometries);
-        }, "Instantiates a GeometriesType based on provided String value.")
-        .def("__repr__", [](RouteParameters::GeometriesType type) {
-            return osrm_nb_util::enum_to_str(type, "RouteGeometriesType", geometries_map);
-        }, "Return a String based on GeometriesType value.");
-    nb::implicitly_convertible<std::string, RouteParameters::GeometriesType>();
-
-    nb::class_<RouteParameters::OverviewType>(m, "RouteOverviewType")
-        .def("__init__", [](RouteParameters::OverviewType* t, const std::string& str) {
-            RouteParameters::OverviewType overview = osrm_nb_util::str_to_enum(str, "RouteOverviewType", overview_map);
-            new (t) RouteParameters::OverviewType(overview);
-        }, "Instantiates a OverviewType based on provided String value.")
-        .def("__repr__", [](RouteParameters::OverviewType type) {
-            return osrm_nb_util::enum_to_str(type, "RouteOverviewType", overview_map);
-        }, "Return a String based on OverviewType value.");
-    nb::implicitly_convertible<std::string, RouteParameters::OverviewType>();
-
-    nb::class_<RouteParameters::AnnotationsType>(m, "RouteAnnotationsType")
-        .def("__init__", [](RouteParameters::AnnotationsType* t, const std::string& str) {
-            RouteParameters::AnnotationsType annotation = osrm_nb_util::str_to_enum(str, "RouteAnnotationsType", route_annotations_map);
-            new (t) RouteParameters::AnnotationsType(annotation);
-        }, "Instantiates a AnnotationsType based on provided String value.")
-        .def("__repr__", [](RouteParameters::AnnotationsType type) {
-            return std::to_string((int)type);
-        }, "Return a String based on AnnotationsType value.")
-        .def("__and__", [](RouteParameters::AnnotationsType lhs, RouteParameters::AnnotationsType rhs) {
-            return lhs & rhs;
-        }, nb::is_operator(), "Return the bitwise AND result of two AnnotationsTypes.")
-        .def("__or__", [](RouteParameters::AnnotationsType lhs, RouteParameters::AnnotationsType rhs) {
-            return lhs | rhs;
-        }, nb::is_operator(), "Return the bitwise OR result of two AnnotationsTypes.")
-        .def("__ior__", [](RouteParameters::AnnotationsType& lhs, RouteParameters::AnnotationsType rhs) {
-            return lhs = lhs | rhs;
-        }, nb::is_operator(), "Add the bitwise OR value of another AnnotationsType.");
-    nb::implicitly_convertible<std::string, RouteParameters::AnnotationsType>();
 }

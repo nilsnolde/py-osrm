@@ -97,9 +97,7 @@ void populate_cfg_from_kwargs(const nb::kwargs& kwargs, EngineConfig& config) {
             assign_val(config.use_mmap, val);
         } },
         { "algorithm", [&config](const std::pair<nb::handle, nb::handle>& val) {
-            std::string str;
-            assign_val(str, val);
-            config.algorithm = osrm_nb_util::str_to_enum(str, "Algorithm", algorithm_map);
+            assign_val(config.algorithm, val);
         } },
         { "verbosity", [&config](const std::pair<nb::handle, nb::handle>& val) {
             assign_val(config.verbosity, val);

@@ -4,8 +4,6 @@
 #include "utility/param_utility.h"
 
 #include <nanobind/nanobind.h>
-#include <nanobind/stl/string.h>
-#include <nanobind/stl/vector.h>
 
 namespace nb = nanobind;
 using namespace nb::literals;
@@ -38,8 +36,12 @@ void init_MatchParameters(nb::module_& m) {
     //             tidy (bool): Allows the input track modification to obtain better matching quality for noisy tracks.
     //             RouteParameters (osrm.RouteParameters): Attributes from parent class."
 
-    nb::class_<MatchParameters, RouteParameters>(m, "MatchParameters")
-        .def(nb::init<>())
+    nb::class_<MatchParameters, RouteParameters> mp(m, "MatchParameters");
+        nb::enum_<MatchParameters::GapsType>(mp, "GapsType")
+            .value("split", MatchParameters::GapsType::Split)
+            .value("ignore", MatchParameters::GapsType::Ignore);
+
+        mp.def(nb::init<>())
         .def("__init__", [](MatchParameters* t,
                 std::vector<unsigned> timestamps,
                 MatchParameters::GapsType gaps_type,
@@ -108,14 +110,4 @@ void init_MatchParameters(nb::module_& m) {
         .def_rw("gaps", &MatchParameters::gaps)
         .def_rw("tidy", &MatchParameters::tidy)
         .def("IsValid", &MatchParameters::IsValid);
-
-    nb::class_<MatchParameters::GapsType>(m, "MatchGapsType")
-        .def("__init__", [](MatchParameters::GapsType* t, const std::string& str) {
-            MatchParameters::GapsType gaps = osrm_nb_util::str_to_enum(str, "MatchGapsType", gaps_map);
-            new (t) MatchParameters::GapsType(gaps);
-        }, "Instantiates a GapsType based on provided String value.")
-        .def("__repr__", [](MatchParameters::GapsType type) {
-            return osrm_nb_util::enum_to_str(type, "MatchGapsType", gaps_map);
-        }, "Return a String based on GapsType value.");
-    nb::implicitly_convertible<std::string, MatchParameters::GapsType>();
 }

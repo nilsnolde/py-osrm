@@ -5,16 +5,9 @@
 
 #include <nanobind/nanobind.h>
 
-#include <unordered_map>
-
-using osrm::engine::api::MatchParameters;
+#include <nanobind/stl/string.h>
+#include <nanobind/stl/vector.h>
 
 void init_MatchParameters(nanobind::module_& m);
-
-static const std::unordered_map<std::string, MatchParameters::GapsType> gaps_map {
-    { "split", MatchParameters::GapsType::Split },
-    { std::string(), MatchParameters::GapsType::Split },
-    { "ignore", MatchParameters::GapsType::Ignore }
-};
 
 #endif //OSRM_NB_MATCHPARAMETER_H

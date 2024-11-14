@@ -4,8 +4,6 @@
 #include "utility/param_utility.h"
 
 #include <nanobind/nanobind.h>
-#include <nanobind/stl/string.h>
-#include <nanobind/stl/vector.h>
 
 namespace nb = nanobind;
 using namespace nb::literals;
@@ -37,8 +35,16 @@ void init_TripParameters(nb::module_& m) {
     //             destination (string): Returned route ends at 'any' or 'last' coordinate.
     //             roundtrip (bool): Returned route is a roundtrip (route returns to first location).
     //             RouteParameters (osrm.RouteParameters): Attributes from parent class."
-    nb::class_<TripParameters, RouteParameters>(m, "TripParameters")
-        .def(nb::init<>())
+    nb::class_<TripParameters, RouteParameters> tp(m, "TripParameters");
+        nb::enum_<TripParameters::SourceType>(tp, "SourceType")
+            .value("any", TripParameters::SourceType::Any)
+            .value("first", TripParameters::SourceType::First);
+
+        nb::enum_<TripParameters::DestinationType>(tp, "DestinationType")
+            .value("any", TripParameters::DestinationType::Any)
+            .value("last", TripParameters::DestinationType::Last);
+
+        tp.def(nb::init<>())
         .def("__init__", [](TripParameters* t,
                 TripParameters::SourceType source,
                 TripParameters::DestinationType destination,
@@ -106,24 +112,4 @@ void init_TripParameters(nb::module_& m) {
         .def_rw("destination", &TripParameters::destination)
         .def_rw("roundtrip", &TripParameters::roundtrip)
         .def("IsValid", &TripParameters::IsValid);
-
-    nb::class_<TripParameters::SourceType>(m, "TripSourceType")
-        .def("__init__", [](TripParameters::SourceType* t, const std::string& str) {
-            TripParameters::SourceType source = osrm_nb_util::str_to_enum(str, "TripSourceType", source_map);
-            new (t) TripParameters::SourceType(source);
-        }, "Instantiates a SourceType based on provided String value.")
-        .def("__repr__", [](TripParameters::SourceType type) {
-            return osrm_nb_util::enum_to_str(type, "TripSourceType", source_map);
-        }, "Return a String based on SourceType value.");
-    nb::implicitly_convertible<std::string, TripParameters::SourceType>();
-
-    nb::class_<TripParameters::DestinationType>(m, "TripDestinationType")
-        .def("__init__", [](TripParameters::DestinationType* t, const std::string& str) {
-            TripParameters::DestinationType dest = osrm_nb_util::str_to_enum(str, "TripDestinationType", dest_map);
-            new (t) TripParameters::DestinationType(dest);
-        }, "Instantiates a DestinationType based on provided String value.")
-        .def("__repr__", [](TripParameters::DestinationType type) {
-            return osrm_nb_util::enum_to_str(type, "TripDestinationType", dest_map);
-        }, "Return a String based on DestinationType value.");
-    nb::implicitly_convertible<std::string, TripParameters::DestinationType>();
 }

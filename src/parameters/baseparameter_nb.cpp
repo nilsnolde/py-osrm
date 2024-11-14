@@ -4,8 +4,6 @@
 #include "utility/param_utility.h"
 
 #include <nanobind/nanobind.h>
-#include <nanobind/stl/string.h>
-#include <nanobind/stl/vector.h>
 
 namespace nb = nanobind;
 using namespace nb::literals;
@@ -40,8 +38,16 @@ void init_BaseParameters(nb::module_& m) {
     //             skip_waypoints (list): Removes waypoints from the response.
     //             snapping (string): 'default' snapping avoids is_startpoint edges, 'any' will snap to any edge in the graph."
             
-    nb::class_<BaseParameters>(m, "BaseParameters")
-        .def(nb::init<>())
+    nb::class_<BaseParameters> bp(m, "BaseParameters");
+        nb::enum_<BaseParameters::SnappingType>(bp, "SnappingType")
+            .value("default", BaseParameters::SnappingType::Default)
+            .value("any", BaseParameters::SnappingType::Any);
+
+        nb::enum_<BaseParameters::OutputFormatType>(bp, "OutputFormatType")
+            .value("json", BaseParameters::OutputFormatType::JSON)
+            .value("flatbuffers", BaseParameters::OutputFormatType::FLATBUFFERS);
+            
+        bp.def(nb::init<>())
         .def_rw("coordinates", &BaseParameters::coordinates)
         .def_rw("hints", &BaseParameters::hints)
         .def_rw("radiuses", &BaseParameters::radiuses)
@@ -53,24 +59,4 @@ void init_BaseParameters(nb::module_& m) {
         .def_rw("skip_waypoints", &BaseParameters::skip_waypoints)
         .def_rw("snapping", &BaseParameters::snapping)
         .def("IsValid", &BaseParameters::IsValid);
-
-    nb::class_<BaseParameters::SnappingType>(m, "SnappingType")
-        .def("__init__", [](BaseParameters::SnappingType* t, const std::string& str) {
-            BaseParameters::SnappingType snapping = osrm_nb_util::str_to_enum(str, "SnappingType", snapping_map);
-            new (t) BaseParameters::SnappingType(snapping);
-        }, "Instantiates a SnappingType based on provided String value.")
-        .def("__repr__", [](BaseParameters::SnappingType type) {
-            return osrm_nb_util::enum_to_str(type, "SnappingType", snapping_map);
-        }, "Return a String based on SnappingType value.");
-    nb::implicitly_convertible<std::string, BaseParameters::SnappingType>();
-
-    nb::class_<BaseParameters::OutputFormatType>(m, "OutputFormatType")
-        .def("__init__", [](BaseParameters::OutputFormatType* t, const std::string& str) {
-            BaseParameters::OutputFormatType output = osrm_nb_util::str_to_enum(str, "OutputFormatType", output_map);
-            new (t) BaseParameters::OutputFormatType(output);
-        }, "Instantiates a OutputFormatType based on provided String value.")
-        .def("__repr__", [](BaseParameters::OutputFormatType type) {
-            return osrm_nb_util::enum_to_str(type, "OutputFormatType", output_map);
-        }, "Return a String based on OutputFormatType value.");
-    nb::implicitly_convertible<std::string, BaseParameters::OutputFormatType>();
 }
