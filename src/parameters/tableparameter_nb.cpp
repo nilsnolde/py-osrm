@@ -21,46 +21,46 @@ static const std::unordered_map<std::string, TableParameters::AnnotationsType> t
     { "distance", TableParameters::AnnotationsType::Distance },
     { "all", TableParameters::AnnotationsType::All }
 };
+    // "Instantiates an instance of TableParameters.
+    //         "Examples:
+    //             >>> table_params = osrm.TableParameters(
+    //                     coordinates = [(7.41337, 43.72956), (7.41546, 43.73077)],
+    //                     sources = [0],
+    //                     destinations = [1],
+    //                     annotations = ['duration'],
+    //                     fallback_speed = 1,
+    //                     fallback_coordinate_type = 'input',
+    //                     scale_factor = 0.9
+    //                 )
+    //             >>> table_params.IsValid()
+    //             True
+    //         "Args:
+    //             sources (list of int): Use location with given index as source. (default [])
+    //             destinations (list of int): Use location with given index as destination. (default [])
+    //             annotations (list of 'none' | 'duration' | 'distance' | 'all'): \
+    //                 Returns additional metadata for each coordinate along the route geometry. (default [])
+    //             fallback_speed (float): If no route found between a source/destination pair, calculate the as-the-crow-flies distance, \
+    //                 then use this speed to estimate duration. (default INVALID_FALLBACK_SPEED)
+    //             fallback_coordinate_type (string 'input' | 'snapped'): When using a fallback_speed, use the user-supplied coordinate (input), \
+    //                 or the snapped location (snapped) for calculating distances. (default '')
+    //             scale_factor: Scales the table duration values by this number (use in conjunction with annotations=durations). (default 1.0)
+    //             BaseParameters (osrm.osrm_ext.BaseParameters): Keyword arguments from parent class.
+    //         "Returns:
+    //             __init__ (osrm.TableParameters): A TableParameters object, for usage in Table.
+    //             IsValid (bool): A bool value denoting validity of parameter values.
+    //         "Attributes:
+    //             sources (list of int): Use location with given index as source.
+    //             destinations (list of int): Use location with given index as destination.
+    //             annotations (string): Returns additional metadata for each coordinate along the route geometry.
+    //             fallback_speed (float): If no route found between a source/destination pair, calculate the as-the-crow-flies distance, \
+    //                 then use this speed to estimate duration.
+    //             fallback_coordinate_type (string): When using a fallback_speed, use the user-supplied coordinate (input), \
+    //                 or the snapped location (snapped) for calculating distances.
+    //             scale_factor: Scales the table duration values by this number (use in conjunction with annotations=durations).
+    //             BaseParameters (osrm.osrm_ext.BaseParameters): Attributes from parent class."
 
     nb::class_<TableParameters, BaseParameters>(m, "TableParameters")
-        .def(nb::init<>(), nb::raw_doc("Instantiates an instance of TableParameters.\n\n"
-            "Examples:\n\
-                >>> table_params = osrm.TableParameters(\n\
-                        coordinates = [(7.41337, 43.72956), (7.41546, 43.73077)],\n\
-                        sources = [0],\n\
-                        destinations = [1],\n\
-                        annotations = ['duration'],\n\
-                        fallback_speed = 1,\n\
-                        fallback_coordinate_type = 'input',\n\
-                        scale_factor = 0.9\n\
-                    )\n\
-                >>> table_params.IsValid()\n\
-                True\n\n"
-            "Args:\n\
-                sources (list of int): Use location with given index as source. (default [])\n\
-                destinations (list of int): Use location with given index as destination. (default [])\n\
-                annotations (list of 'none' | 'duration' | 'distance' | 'all'): \
-                    Returns additional metadata for each coordinate along the route geometry. (default [])\n\
-                fallback_speed (float): If no route found between a source/destination pair, calculate the as-the-crow-flies distance, \
-                    then use this speed to estimate duration. (default INVALID_FALLBACK_SPEED)\n\
-                fallback_coordinate_type (string 'input' | 'snapped'): When using a fallback_speed, use the user-supplied coordinate (input), \
-                    or the snapped location (snapped) for calculating distances. (default '')\n\
-                scale_factor: Scales the table duration values by this number (use in conjunction with annotations=durations). (default 1.0)\n\
-                BaseParameters (osrm.osrm_ext.BaseParameters): Keyword arguments from parent class.\n\n"
-            "Returns:\n\
-                __init__ (osrm.TableParameters): A TableParameters object, for usage in Table.\n\
-                IsValid (bool): A bool value denoting validity of parameter values.\n\n"
-            "Attributes:\n\
-                sources (list of int): Use location with given index as source.\n\
-                destinations (list of int): Use location with given index as destination.\n\
-                annotations (string): Returns additional metadata for each coordinate along the route geometry.\n\
-                fallback_speed (float): If no route found between a source/destination pair, calculate the as-the-crow-flies distance, \
-                    then use this speed to estimate duration.\n\
-                fallback_coordinate_type (string): When using a fallback_speed, use the user-supplied coordinate (input), \
-                    or the snapped location (snapped) for calculating distances.\n\
-                scale_factor: Scales the table duration values by this number (use in conjunction with annotations=durations).\n\
-                BaseParameters (osrm.osrm_ext.BaseParameters): Attributes from parent class."
-            ))
+        .def(nb::init<>())
         .def("__init__", [](TableParameters* t,
                 std::vector<std::size_t> sources,
                 std::vector<std::size_t> destinations,

@@ -15,50 +15,51 @@ void init_RouteParameters(nb::module_& m) {
     using osrm::engine::api::BaseParameters;
     using osrm::engine::api::RouteParameters;
 
+    // "Instantiates an instance of RouteParameters.
+    //         "Examples:
+    //             >>> route_params = osrm.RouteParameters(
+    //                     coordinates = [(7.41337, 43.72956), (7.41546, 43.73077)],
+    //                     steps = True,
+    //                     number_of_alternatives = 3,
+    //                     annotations = ['speed'],
+    //                     geometries = 'polyline',
+    //                     overview = 'simplified',
+    //                     continue_straight = False,
+    //                     waypoints = [0, 1],
+    //                     radiuses = [4.07, 4.07],
+    //                     bearings = [(200, 180), (250, 180)],
+    //                     # approaches = ['unrestricted', 'unrestricted'],
+    //                     generate_hints = False,
+    //                     exclude = ['motorway'],
+    //                     snapping = 'any'
+    //                 )
+    //             >>> route_params.IsValid()
+    //             True
+    //         "Args:
+    //             steps (bool): Return route steps for each route leg. (default False)
+    //             number_of_alternatives (int): Search for n alternative routes. (default 0)
+    //             annotations (list of 'none' | 'duration' |  'nodes' | 'distance' | 'weight' | 'datasources' \
+    //                 | 'speed' | 'all'): Returns additional metadata for each coordinate along the route geometry. (default [])
+    //             geometries (string 'polyline' | 'polyline6' | 'geojson'): Returned route geometry format - influences overview and per step. (default "")
+    //             overview (string 'simplified' | 'full' | 'false'): Add overview geometry either full, simplified. (default '')
+    //             continue_straight (bool): Forces the route to keep going straight at waypoints, constraining u-turns. (default {})
+    //             waypoints (list of int): Treats input coordinates indicated by given indices as waypoints in returned Match object. (default [])
+    //             BaseParameters (osrm.osrm_ext.BaseParameters): Keyword arguments from parent class.
+    //         "Returns:
+    //             __init__ (osrm.RouteParameters): A RouteParameters object, for usage in Route.
+    //             IsValid (bool): A bool value denoting validity of parameter values.
+    //         "Attributes:
+    //             steps (bool): Return route steps for each route leg.
+    //             alternatives (bool): Search for alternative routes.
+    //             number_of_alternatives (int): Search for n alternative routes.
+    //             annotations_type (string): Returns additional metadata for each coordinate along the route geometry.
+    //             geometries (string): Returned route geometry format - influences overview and per step.
+    //             overview (string): Add overview geometry either full, simplified.
+    //             continue_straight (bool): Forces the route to keep going straight at waypoints, constraining u-turns.
+    //             BaseParameters (osrm.osrm_ext.BaseParameters): Attributes from parent class."
+
     nb::class_<RouteParameters, BaseParameters>(m, "RouteParameters")
-        .def(nb::init<>(), nb::raw_doc("Instantiates an instance of RouteParameters.\n\n"
-            "Examples:\n\
-                >>> route_params = osrm.RouteParameters(\n\
-                        coordinates = [(7.41337, 43.72956), (7.41546, 43.73077)],\n\
-                        steps = True,\n\
-                        number_of_alternatives = 3,\n\
-                        annotations = ['speed'],\n\
-                        geometries = 'polyline',\n\
-                        overview = 'simplified',\n\
-                        continue_straight = False,\n\
-                        waypoints = [0, 1],\n\
-                        radiuses = [4.07, 4.07],\n\
-                        bearings = [(200, 180), (250, 180)],\n\
-                        # approaches = ['unrestricted', 'unrestricted'],\n\
-                        generate_hints = False,\n\
-                        exclude = ['motorway'],\n\
-                        snapping = 'any'\n\
-                    )\n\
-                >>> route_params.IsValid()\n\
-                True\n\n"
-            "Args:\n\
-                steps (bool): Return route steps for each route leg. (default False)\n\
-                number_of_alternatives (int): Search for n alternative routes. (default 0)\n\
-                annotations (list of 'none' | 'duration' |  'nodes' | 'distance' | 'weight' | 'datasources' \
-                    | 'speed' | 'all'): Returns additional metadata for each coordinate along the route geometry. (default [])\n\
-                geometries (string 'polyline' | 'polyline6' | 'geojson'): Returned route geometry format - influences overview and per step. (default "")\n\
-                overview (string 'simplified' | 'full' | 'false'): Add overview geometry either full, simplified. (default '')\n\
-                continue_straight (bool): Forces the route to keep going straight at waypoints, constraining u-turns. (default {})\n\
-                waypoints (list of int): Treats input coordinates indicated by given indices as waypoints in returned Match object. (default [])\n\
-                BaseParameters (osrm.osrm_ext.BaseParameters): Keyword arguments from parent class.\n\n"
-            "Returns:\n\
-                __init__ (osrm.RouteParameters): A RouteParameters object, for usage in Route.\n\
-                IsValid (bool): A bool value denoting validity of parameter values.\n\n"
-            "Attributes:\n\
-                steps (bool): Return route steps for each route leg.\n\
-                alternatives (bool): Search for alternative routes.\n\
-                number_of_alternatives (int): Search for n alternative routes.\n\
-                annotations_type (string): Returns additional metadata for each coordinate along the route geometry.\n\
-                geometries (string): Returned route geometry format - influences overview and per step.\n\
-                overview (string): Add overview geometry either full, simplified.\n\
-                continue_straight (bool): Forces the route to keep going straight at waypoints, constraining u-turns.\n\
-                BaseParameters (osrm.osrm_ext.BaseParameters): Attributes from parent class."
-            ))
+        .def(nb::init<>())
         .def("__init__", [](RouteParameters* t,
                 const bool steps,
                 int number_of_alternatives,

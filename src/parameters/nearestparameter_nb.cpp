@@ -14,24 +14,25 @@ void init_NearestParameters(nb::module_& m) {
     using osrm::engine::api::BaseParameters;
     using osrm::engine::api::NearestParameters;
 
+    // "Instantiates an instance of NearestParameters.
+    //         "Examples:
+    //             >>> nearest_params = osrm.NearestParameters(
+    //                     coordinates = [(7.41337, 43.72956)],
+    //                     exclude = ['motorway']
+    //                 )
+    //             >>> nearest_params.IsValid()
+    //             True
+    //         "Args:
+    //             BaseParameters (osrm.osrm_ext.BaseParameters): Keyword arguments from parent class.
+    //         "Returns:
+    //             __init__ (osrm.NearestParameters): A NearestParameters object, for usage in osrm.OSRM.Nearest.
+    //             IsValid (bool): A bool value denoting validity of parameter values.
+    //         "Attributes:
+    //             number_of_results (unsigned int): Number of nearest segments that should be returned.
+    //             BaseParameters (osrm.osrm_ext.BaseParameters): Attributes from parent class."
+
     nb::class_<NearestParameters, BaseParameters>(m, "NearestParameters")
-        .def(nb::init<>(), nb::raw_doc("Instantiates an instance of NearestParameters.\n\n"
-            "Examples:\n\
-                >>> nearest_params = osrm.NearestParameters(\n\
-                        coordinates = [(7.41337, 43.72956)],\n\
-                        exclude = ['motorway']\n\
-                    )\n\
-                >>> nearest_params.IsValid()\n\
-                True\n\n"
-            "Args:\n\
-                BaseParameters (osrm.osrm_ext.BaseParameters): Keyword arguments from parent class.\n\n"
-            "Returns:\n\
-                __init__ (osrm.NearestParameters): A NearestParameters object, for usage in osrm.OSRM.Nearest.\n\
-                IsValid (bool): A bool value denoting validity of parameter values.\n\n"
-            "Attributes:\n\
-                number_of_results (unsigned int): Number of nearest segments that should be returned.\n\
-                BaseParameters (osrm.osrm_ext.BaseParameters): Attributes from parent class."
-            ))
+        .def(nb::init<>())
         .def("__init__", [](NearestParameters* t,
                 std::vector<osrm::util::Coordinate> coordinates,
                 std::vector<std::optional<osrm::engine::Hint>> hints,

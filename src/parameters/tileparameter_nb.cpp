@@ -14,30 +14,31 @@ using namespace nb::literals;
 void init_TileParameters(nb::module_& m) {
     using osrm::engine::api::TileParameters;
 
+    // "Instantiates an instance of TileParameters.
+    //         "Examples:
+    //             >>> tile_params = osrm.TileParameters([17059, 11948, 15])
+    //             >>> tile_params = osrm.TileParameters(
+    //                     x = 17059,
+    //                     y = 11948,
+    //                     z = 15
+    //                 )
+    //             >>> tile_params.IsValid()
+    //             True
+    //         "Args:
+    //             list (list of int): Instantiates an instance of TileParameters using an array [x, y, z].
+    //             x (int): x value.
+    //             y (int): y value.
+    //             z (int): z value.
+    //         "Returns:
+    //             __init__ (osrm.TileParameters): A TileParameters object, for usage in Tile.
+    //             IsValid (bool): A bool value denoting validity of parameter values.
+    //         "Attributes:
+    //             x (int): x value.
+    //             y (int): y value.
+    //             z (int): z value."
+
     nb::class_<TileParameters>(m, "TileParameters", nb::is_final())
-        .def(nb::init<>(), nb::raw_doc("Instantiates an instance of TileParameters.\n\n"
-            "Examples:\n\
-                >>> tile_params = osrm.TileParameters([17059, 11948, 15])\n\
-                >>> tile_params = osrm.TileParameters(\n\
-                        x = 17059,\n\
-                        y = 11948,\n\
-                        z = 15\n\
-                    )\n\
-                >>> tile_params.IsValid()\n\
-                True\n\n"
-            "Args:\n\
-                list (list of int): Instantiates an instance of TileParameters using an array [x, y, z].\n\
-                x (int): x value.\n\
-                y (int): y value.\n\
-                z (int): z value.\n\n"
-            "Returns:\n\
-                __init__ (osrm.TileParameters): A TileParameters object, for usage in Tile.\n\
-                IsValid (bool): A bool value denoting validity of parameter values.\n\n"
-            "Attributes:\n\
-                x (int): x value.\n\
-                y (int): y value.\n\
-                z (int): z value."
-            ))
+        .def(nb::init<>())
         .def(nb::init<unsigned int, unsigned int, unsigned int>())
         .def("__init__", [](TileParameters* t, const std::vector<unsigned int>& coord) {
             if(coord.size() != 3) {
