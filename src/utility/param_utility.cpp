@@ -71,18 +71,4 @@ RouteParameters::AnnotationsType calculate_routeannotations_type(const std::vect
     return res;
 }
 
-TableParameters::AnnotationsType calculate_tableannotations_type(const std::vector<TableParameters::AnnotationsType>& annotations) {
-    if(annotations.empty()) {
-        return TableParameters::AnnotationsType::Duration;
-    }
-    
-    TableParameters::AnnotationsType res = TableParameters::AnnotationsType::None;
-
-    for(int i = 0; i < annotations.size(); ++i) {
-        res  = res | annotations[i];
-    }
-    
-    return res;
-}
-
 } //namespace osrm_nb_util
