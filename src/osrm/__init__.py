@@ -5,12 +5,14 @@ from .osrm_ext import (
     Bearing,
     Coordinate,
 
+    BaseParameters,
     RouteParameters,
     NearestParameters,
     TableParameters,
     TileParameters,
     TripParameters,
     MatchParameters,
+    Approach,
 
     Array,
     Object
