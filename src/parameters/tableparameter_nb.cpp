@@ -65,24 +65,24 @@ void init_TableParameters(nb::module_& m) {
         .def("__init__", [](TableParameters* t,
                 std::vector<std::size_t> sources,
                 std::vector<std::size_t> destinations,
-                const std::vector<TableParameters::AnnotationsType>& annotations,
+                TableParameters::AnnotationsType annotations,
                 double fallback_speed,
                 TableParameters::FallbackCoordinateType fallback_coordinate_type,
                 double scale_factor,
-                    std::vector<osrm::util::Coordinate> coordinates,
-                    std::vector<std::optional<osrm::engine::Hint>> hints,
-                    std::vector<std::optional<double>> radiuses,
-                    std::vector<std::optional<osrm::engine::Bearing>> bearings,
-                    const std::vector<std::optional<osrm::engine::Approach>>& approaches,
-                    bool generate_hints,
-                    std::vector<std::string> exclude,
-                    const BaseParameters::SnappingType snapping
+                std::vector<osrm::util::Coordinate> coordinates,
+                std::vector<std::optional<osrm::engine::Hint>> hints,
+                std::vector<std::optional<double>> radiuses,
+                std::vector<std::optional<osrm::engine::Bearing>> bearings,
+                const std::vector<std::optional<osrm::engine::Approach>>& approaches,
+                bool generate_hints,
+                std::vector<std::string> exclude,
+                const BaseParameters::SnappingType snapping
             ) {
                 new (t) TableParameters();
 
                 t->sources = std::move(sources);
                 t->destinations = std::move(destinations);
-                t->annotations = osrm_nb_util::calculate_tableannotations_type(annotations);
+                t->annotations = annotations;
                 t->fallback_speed = fallback_speed;
                 t->fallback_coordinate_type = fallback_coordinate_type;
                 t->scale_factor = scale_factor;
@@ -99,18 +99,18 @@ void init_TableParameters(nb::module_& m) {
             },
                 "sources"_a = std::vector<std::size_t>(),
                 "destinations"_a = std::vector<std::size_t>(),
-                "annotations"_a = std::vector<std::string>(),
+                "annotations"_a = TableParameters::AnnotationsType::Duration,
                 "fallback_speed"_a = osrm::from_alias<double>(INVALID_FALLBACK_SPEED),
-                "fallback_coordinate_type"_a = std::string(),
+                "fallback_coordinate_type"_a = TableParameters::FallbackCoordinateType::Input,
                 "scale_factor"_a = 1.0,
-                    "coordinates"_a = std::vector<osrm::util::Coordinate>(),
-                    "hints"_a = std::vector<std::optional<osrm::engine::Hint>>(),
-                    "radiuses"_a = std::vector<std::optional<double>>(),
-                    "bearings"_a = std::vector<std::optional<osrm::engine::Bearing>>(),
-                    "approaches"_a = std::vector<std::string*>(),
-                    "generate_hints"_a = true,
-                    "exclude"_a = std::vector<std::string>(),
-                    "snapping"_a = std::string()
+                "coordinates"_a = std::vector<osrm::util::Coordinate>(),
+                "hints"_a = std::vector<std::optional<osrm::engine::Hint>>(),
+                "radiuses"_a = std::vector<std::optional<double>>(),
+                "bearings"_a = std::vector<std::optional<osrm::engine::Bearing>>(),
+                "approaches"_a = std::vector<std::optional<osrm::engine::Approach>>(),
+                "generate_hints"_a = true,
+                "exclude"_a = std::vector<std::string>(),
+                "snapping"_a = BaseParameters::SnappingType::Default
             )
         .def_rw("sources", &TableParameters::sources)
         .def_rw("destinations", &TableParameters::destinations)
