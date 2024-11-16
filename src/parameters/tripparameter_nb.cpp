@@ -12,30 +12,22 @@ void init_TripParameters(nb::module_& m) {
     using osrm::engine::api::RouteParameters;
     using osrm::engine::api::TripParameters;
 
-    // "Instantiates an instance of TripParameters.
-    //         "Examples:
-    //             >>> trip_params = osrm.TripParameters(
-    //                     coordinates = [(7.41337, 43.72956), (7.41546, 43.73077)],
-    //                     source = 'any',
-    //                     destination = 'last',
-    //                     roundtrip = False
-    //                 )
-    //             >>> trip_params.IsValid()
-    //             True
-    //         "Args:
-    //             source (string 'any' | 'first'): Returned route starts at 'any' or 'first' coordinate. (default '')
-    //             destination (string 'any' | 'last'): Returned route ends at 'any' or 'last' coordinate. (default '')
-    //             roundtrip (bool): Returned route is a roundtrip (route returns to first location). (default True)
-    //             RouteParameters (osrm.RouteParameters): Keyword arguments from parent class.
-    //         "Returns:
-    //             __init__ (osrm.TripParameters): A TripParameters object, for usage in Trip.
-    //             IsValid (bool): A bool value denoting validity of parameter values.
-    //         "Attributes:
-    //             source (string): Returned route starts at 'any' or 'first' coordinate.
-    //             destination (string): Returned route ends at 'any' or 'last' coordinate.
-    //             roundtrip (bool): Returned route is a roundtrip (route returns to first location).
-    //             RouteParameters (osrm.RouteParameters): Attributes from parent class."
     nb::class_<TripParameters, RouteParameters> tp(m, "TripParameters");
+        tp.doc() =  "TripParameters is an object containing configurations for OSRM trip requests.\n\n"
+                    "Attributes:\n"
+                    "   - source (TripParameters.SourceType): Returned route starts at 'any' or 'first' coordinate.\n"
+                    "   - destination (TripParameters.DestinationType): Returned route ends at 'any' or 'last' coordinate.\n"
+                    "   - roundtrip (bool): Returned route is a roundtrip (route returns to first location).\n"
+                    "   - RouteParameters (osrm.RouteParameters): Attributes from parent class.\n"
+                    "Examples:\n"
+                    "    >>> trip_params = osrm.TripParameters(\n"
+                    "            coordinates = [(7.41337, 43.72956), (7.41546, 43.73077)],\n"
+                    "            source = TripParameters.SourceType.any,\n"
+                    "            destination = TripParameters.DestinationType.last,\n"
+                    "            roundtrip = False\n"
+                    "        )\n"
+                    "    >>> trip_params.IsValid()\n"
+                    "    True\n";
         nb::enum_<TripParameters::SourceType>(tp, "SourceType")
             .value("any", TripParameters::SourceType::Any)
             .value("first", TripParameters::SourceType::First);
@@ -106,7 +98,15 @@ void init_TripParameters(nb::module_& m) {
                 "approaches"_a = std::vector<std::optional<osrm::engine::Approach>>(),
                 "generate_hints"_a = true,
                 "exclude"_a = std::vector<std::string>(),
-                "snapping"_a = BaseParameters::SnappingType::Default
+                "snapping"_a = BaseParameters::SnappingType::Default,
+                "Instantiates an instance of TripParameters.\n"
+                "Args:\n"
+                "    - source (TripParameters.SourceType any | first): Returned route starts at 'any' or 'first' coordinate. (default any)\n"
+                "    - destination (TripParameters.DestinationType any | last): Returned route ends at 'any' or 'last' coordinate. (default any)\n"
+                "    - roundtrip (bool): Returned route is a roundtrip (route returns to first location). (default True)\n"
+                "    - RouteParameters (osrm.RouteParameters): Keyword arguments from parent class.\n"
+                "Returns:\n"
+                "    __init__ (osrm.TripParameters): A TripParameters object, for usage in Trip.\n"
             )
         .def_rw("source", &TripParameters::source)
         .def_rw("destination", &TripParameters::destination)

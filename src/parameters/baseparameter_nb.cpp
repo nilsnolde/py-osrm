@@ -11,34 +11,19 @@ using namespace nb::literals;
 void init_BaseParameters(nb::module_& m) {
     using osrm::engine::api::BaseParameters;
 
-    // "Instantiates an instance of BaseParameters.
-    //         "Note:
-    //             This is the parent class to many parameter classes, and not intended to be used on its own.
-    //         "Args:
-    //             coordinates (list of floats pairs): Pairs of Longitude and Latitude Coordinates. (default [])
-    //             hints (list): Hint from previous request to derive position in street network. (default [])
-    //             radiuses (list of floats): Limits the search to given radius in meters. (default [])
-    //             bearings (list of int pairs): Limits the search to segments with given bearing in degrees towards true north in clockwise direction. (default [])
-    //             approaches (list): Keep waypoints on curb side. (default [])
-    //             generate_hints (bool): Adds a hint to the response which can be used in subsequent requests. (default True)
-    //             exclude (list of strings): Additive list of classes to avoid. (default [])
-    //             snapping (string 'default' | 'any'): 'default' snapping avoids is_startpoint edges, 'any' will snap to any edge in the graph. (default '')
-    //         "Returns:
-    //             __init__ (py_osrm.osrm_ext.BaseParameters): A BaseParameter object, that is the parent object to many other Parameter objects.
-    //             IsValid (bool): A bool value denoting validity of parameter values.
-    //         "Attributes:
-    //             coordinates (list of floats pairs): Pairs of longitude & latitude coordinates.
-    //             hints (list): Hint from previous request to derive position in street network.
-    //             radiuses (list of floats): Limits the search to given radius in meters.
-    //             bearings (list of int pairs): Limits the search to segments with given bearing in degrees towards true north in clockwise direction.
-    //             approaches (list): Keep waypoints on curb side.
-    //             exclude (list of strings): Additive list of classes to avoid, order does not matter.
-    //             format (string): Specifies response type - currently only 'json' is supported.
-    //             generate_hints (bool): Adds a hint to the response which can be used in subsequent requests.
-    //             skip_waypoints (list): Removes waypoints from the response.
-    //             snapping (string): 'default' snapping avoids is_startpoint edges, 'any' will snap to any edge in the graph."
-            
     nb::class_<BaseParameters> bp(m, "BaseParameters");
+        bp.doc() = "This is the parent class to many parameter classes, and not intended to be used on its own.\n\n"
+                    "Attributes:\n"
+                    "   - coordinates (list of floats pairs | osrm.Coordinate): Pairs of longitude & latitude coordinates.\n"
+                    "   - hints (list): Hint from previous request to derive position in street network.\n"
+                    "   - radiuses (list of floats): Limits the search to given radius in meters.\n"
+                    "   - bearings (list of int pairs | osrm.Bearing): Limits the search to segments with given bearing in degrees towards true north in clockwise direction.\n"
+                    "   - approaches (list of osrm.Approach): Keep waypoints on curb side.\n"
+                    "   - exclude (list of strings): Additive list of classes to avoid, order does not matter.\n"
+                    "   - format (string): Specifies response type - currently only 'json' is supported.\n"
+                    "   - generate_hints (bool): Adds a hint to the response which can be used in subsequent requests.\n"
+                    "   - skip_waypoints (list): Removes waypoints from the response.\n"
+                    "   - snapping (BaseParameters.SnappingType): 'default' snapping avoids is_startpoint edges, 'any' will snap to any edge in the graph.\n";
         nb::enum_<BaseParameters::SnappingType>(bp, "SnappingType")
             .value("default", BaseParameters::SnappingType::Default)
             .value("any", BaseParameters::SnappingType::Any);
@@ -47,7 +32,11 @@ void init_BaseParameters(nb::module_& m) {
             .value("json", BaseParameters::OutputFormatType::JSON)
             .value("flatbuffers", BaseParameters::OutputFormatType::FLATBUFFERS);
             
-        bp.def(nb::init<>())
+        bp.def(nb::init<>(),
+            "Instantiates an instance of BaseParameters.\n"
+            "Returns:\n"
+            "    __init__ (py_osrm.osrm_ext.BaseParameters): A BaseParameter object, that is the parent object to many other Parameter objects.\n"
+            )
         .def_rw("coordinates", &BaseParameters::coordinates)
         .def_rw("hints", &BaseParameters::hints)
         .def_rw("radiuses", &BaseParameters::radiuses)

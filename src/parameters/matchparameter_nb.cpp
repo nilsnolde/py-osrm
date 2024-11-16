@@ -12,31 +12,23 @@ void init_MatchParameters(nb::module_& m) {
     using osrm::engine::api::RouteParameters;
     using osrm::engine::api::MatchParameters;
 
-    // "Instantiates an instance of MatchParameters.
-    //         "Examples:
-    //             >>> match_params = osrm.MatchParameters(
-    //                     coordinates = [(7.41337, 43.72956), (7.41546, 43.73077), (7.41862, 43.73216)],
-    //                     timestamps = [1424684612, 1424684616, 1424684620],
-    //                     gaps = 'split',
-    //                     tidy = True
-    //                 )
-    //             >>> match_params.IsValid()
-    //             True
-    //         "Args:
-    //             timestamps (list of unsigned int): Timestamps for the input locations in seconds since UNIX epoch. (default [])
-    //             gaps (list of 'split' | 'ignore'): Allows the input track splitting based on huge timestamp gaps between points. (default [])
-    //             tidy (bool): Allows the input track modification to obtain better matching quality for noisy tracks. (default False)
-    //             RouteParameters (osrm.RouteParameters): Keyword arguments from parent class.
-    //         "Returns:
-    //             __init__ (osrm.MatchParameters): A MatchParameters object, for usage in Match.
-    //             IsValid (bool): A bool value denoting validity of parameter values.
-    //         "Attributes:
-    //             timestamps (list of unsigned int): Timestamps for the input locations in seconds since UNIX epoch.
-    //             gaps (string): Allows the input track splitting based on huge timestamp gaps between points.
-    //             tidy (bool): Allows the input track modification to obtain better matching quality for noisy tracks.
-    //             RouteParameters (osrm.RouteParameters): Attributes from parent class."
-
     nb::class_<MatchParameters, RouteParameters> mp(m, "MatchParameters");
+        mp.doc() =  "MatchParameters is an object containing configurations for OSRM match requests.\n\n"
+                    "Attributes:\n"
+                    "   - timestamps (list of unsigned int): Timestamps for the input locations in seconds since UNIX epoch.\n"
+                    "   - gaps (MatchParameters.GapsType): Allows the input track splitting based on huge timestamp gaps between points.\n"
+                    "   - tidy (bool): Allows the input track modification to obtain better matching quality for noisy tracks.\n"
+                    "   - RouteParameters (osrm.RouteParameters): Attributes from parent class.\n"
+                    "Examples:\n"
+                    "    >>> match_params = osrm.MatchParameters(\n"
+                    "            coordinates = [(7.41337, 43.72956), (7.41546, 43.73077), (7.41862, 43.73216)],\n"
+                    "            timestamps = [1424684612, 1424684616, 1424684620],\n"
+                    "            gaps = MatchParameters.GapsType.split,\n"
+                    "            tidy = True\n"
+                    "        )\n"
+                    "    >>> match_params.IsValid()\n"
+                    "    True;\n";
+
         nb::enum_<MatchParameters::GapsType>(mp, "GapsType")
             .value("split", MatchParameters::GapsType::Split)
             .value("ignore", MatchParameters::GapsType::Ignore);
@@ -104,7 +96,15 @@ void init_MatchParameters(nb::module_& m) {
                 "approaches"_a = std::vector<std::optional<osrm::engine::Approach>>(),
                 "generate_hints"_a = true,
                 "exclude"_a = std::vector<std::string>(),
-                "snapping"_a = BaseParameters::SnappingType::Default
+                "snapping"_a = BaseParameters::SnappingType::Default,
+                "Instantiates an instance of MatchParameters.\n"
+                "Args:\n"
+                "    - timestamps (list of unsigned int): Timestamps for the input locations in seconds since UNIX epoch. (default [])\n"
+                "    - gaps (MatchParameters.GapsType): Allows the input track splitting based on huge timestamp gaps between points. (default split)\n"
+                "    - tidy (bool): Allows the input track modification to obtain better matching quality for noisy tracks. (default False)\n"
+                "    - RouteParameters (osrm.RouteParameters): Keyword arguments from parent class.\n"
+                "Returns:\n"
+                "    __init__ (osrm.MatchParameters): A MatchParameters object, for usage in Match.\n"
             )
         .def_rw("timestamps", &MatchParameters::timestamps)
         .def_rw("gaps", &MatchParameters::gaps)
